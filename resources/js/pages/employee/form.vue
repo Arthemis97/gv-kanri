@@ -1,0 +1,137 @@
+<script setup lang="ts">
+import useEmployeeStore from "../../stores/employee";
+const employeeStore = useEmployeeStore();
+const { getErrors } = storeToRefs(employeeStore)
+const router = useRouter();
+const form = ref({})
+
+const drlc = [
+    { value: 1, text: "普通免許(AT、MT、第一種、第二種)" },
+    { value: 2, text: "準中型免許" },
+    { value: 3, text: "中型免許(第一種、第二種)" },
+    { value: 4, text: "大型免許(第一種、第二種)" },
+    { value: 5, text: "小型特殊免許" },
+    { value: 6, text: "大型特殊免許(第一種、第二種)" },
+    { value: 7, text: "牽引免許(第一種、第二種)" },
+    { value: 8, text: "普通二輪免許(AT、MT)" },
+    { value: 9, text: "大型二輪免許" },
+    { value: 10, text: "原付免許" },
+    { value: 11, text: "運転免許証なし" }
+]
+
+const workplace = [
+    { value: 1, text: "中沢乳業社" },
+    { value: 2, text: "相模原" },
+    { value: 3, text: "浦和美園センター" },
+    { value: 4, text: "解体" },
+    { value: 5, text: "引っ越し" }
+]
+const workplan = [
+    { value: 1, text: "1年" },
+    { value: 2, text: "2年" },
+    { value: 3, text: "3年" },
+    { value: 4, text: "3年以上" }
+]
+
+const save = async () => {
+    await employeeStore.store(form.value)
+    if (getErrors.value) {
+    }
+    // router.push('/employee')
+}
+</script>
+<template>
+    <a-form class="tw-max-w-[600px]" layout="vertical">
+        <a-row :gutter="14">
+            <a-col :span="12">
+                <a-form-item label="氏名">
+                    <a-input placeholder="氏名" v-model:value="form.name"
+                        :status="getErrors && getErrors.errors.name ? 'error' : ''" />
+                </a-form-item>
+            </a-col>
+            <a-col :span="12">
+                <a-form-item label="フリガナ">
+                    <a-input placeholder="フリガナ" v-model:value="form.furigana"
+                        :status="getErrors && getErrors.errors.furigana ? 'error' : ''" />
+                </a-form-item>
+            </a-col>
+            <a-col :span="12">
+                <a-form-item label="誕生日">
+                    <a-date-picker valueFormat="YYYY-MM-DD" placeholder="誕生日" class="tw-w-full" v-model:value="form.dob"
+                        :status="getErrors && getErrors.errors.dob ? 'error' : ''" />
+                </a-form-item>
+            </a-col>
+            <a-col :span="12">
+                <a-form-item label="性別">
+                    <a-select placeholder="性別" v-model:value="form.gender"
+                        :status="getErrors && getErrors.errors.gender ? 'error' : ''">
+                        <a-select-option key="1" :value="1">男</a-select-option>
+                        <a-select-option key="2" :value="0">女</a-select-option>
+                    </a-select>
+                </a-form-item>
+            </a-col>
+            <a-col :span="24">
+                <a-form-item label="写真">
+                    <a-upload name="avatar" list-type="picture-card" :show-upload-list="false">
+                        <div>
+                            <div class="ant-upload-text">Upload</div>
+                        </div>
+                    </a-upload>
+                </a-form-item>
+            </a-col>
+            <a-col :span="24">
+                <a-form-item label="住所">
+                    <a-input placeholder="住所" v-model:value="form.address"
+                        :status="getErrors && getErrors.errors.address ? 'error' : ''" />
+                </a-form-item>
+            </a-col>
+            <a-col :span="12">
+                <a-form-item label="在留期間">
+                    <a-input placeholder="在留期間" v-model:value="form.pos"
+                        :status="getErrors && getErrors.errors.pos ? 'error' : ''" />
+                </a-form-item>
+            </a-col>
+            <a-col :span="12">
+                <a-form-item label="終了日">
+                    <a-date-picker valueFormat="YYYY-MM-DD" placeholder="終了日" class="tw-w-full"
+                        v-model:value="form.pos_date" :status="getErrors && getErrors.errors.pos_date ? 'error' : ''" />
+                </a-form-item>
+            </a-col>
+            <a-col :span="24">
+                <a-form-item label="運転免許">
+                    <a-select placeholder="運転免許" v-model:value="form.driver_license"
+                        :status="getErrors && getErrors.errors.driver_license ? 'error' : ''">
+                        <a-select-option v-for="(i, i_index) in drlc" :value="i.value" :key="i_index">{{ i.text
+                        }}</a-select-option>
+                    </a-select>
+                </a-form-item>
+            </a-col>
+            <a-col :span="12">
+                <a-form-item label="職場名">
+                    <a-select placeholder="職場名" v-model:value="form.working_place"
+                        :status="getErrors && getErrors.errors.working_place ? 'error' : ''">
+                        <a-select-option v-for="(i, i_index) in workplace" :value="i.value" :key="i_index">{{ i.text
+                        }}</a-select-option>
+                    </a-select>
+                </a-form-item>
+            </a-col>
+            <a-col :span="12">
+                <a-form-item label="働く期間（プラン）">
+                    <a-select placeholder="働く期間（プラン）" v-model:value="form.working_plan"
+                        :status="getErrors && getErrors.errors.working_plan ? 'error' : ''">
+                        <a-select-option v-for="(i, i_index) in workplan" :value="i.value" :key="i_index">{{ i.text
+                        }}</a-select-option>
+                    </a-select>
+                </a-form-item>
+            </a-col>
+            <a-col :span="24">
+                <a-form-item label="自己PR">
+                    <a-input placeholder="自己PR" v-model:value="form.introduce"
+                        :status="getErrors && getErrors.errors.introduce ? 'error' : ''" />
+                </a-form-item>
+            </a-col>
+        </a-row>
+        <a-button type="primary" @click="save">Save</a-button>
+    </a-form>
+</template>
+
