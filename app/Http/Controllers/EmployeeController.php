@@ -102,10 +102,7 @@ class EmployeeController extends Controller
             'address' => 'required',
             'pos' => 'required',
             'pos_date' => 'required',
-            'driver_license' => 'required',
-            'working_place' => 'required',
-            'working_plan' => 'required',
-            'introduce' => 'required'
+            'driver_license' => 'required'
         ];
 
         $this->validate($request, $rules);
