@@ -45,7 +45,7 @@ class EmployeeController extends Controller
             $per_page = $request->get('per_page');
         }
 
-        $employees = User::with(['national'])->worker();
+        $employees = User::worker()->with(['national']);
 
         if ($request->has('name')) {
             $employees = $employees->where('name', 'like', '%' . $request->get('name') . '%');
