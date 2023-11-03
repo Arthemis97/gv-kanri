@@ -31,7 +31,7 @@ const useEmployeeStore = defineStore('employee', {
             }
         },
         async fetchWorkerList(fltr, pgn) {
-            let url = '/worker?per_page=1'
+            let url = '/worker?per_page=20'
             if (fltr) {
                 url += `&${objectToQueryString(fltr)}`
             }
