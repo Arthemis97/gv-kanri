@@ -5,8 +5,10 @@ import defaultLayout from './layouts/default.vue'
 import jpJP from 'ant-design-vue/es/locale/ja_JP';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ja';
+import useNationStore from "./stores/nation";
 dayjs.locale('ja');
 const authStore = useAuthStore()
+const nationStore = useNationStore()
 const router = useRouter()
 const route = useRoute()
 useEvent.on('logout', () => {
@@ -14,8 +16,9 @@ useEvent.on('logout', () => {
     router.push('/login')
 })
 
-onMounted(() => {
+onMounted(async () => {
     // console.log(route.meta.layout)
+    await nationStore.fetchList();
 })
 </script>
 

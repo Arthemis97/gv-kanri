@@ -1,22 +1,51 @@
 <script setup lang="ts">
-import { PlusOutlined, DeleteOutlined } from '@ant-design/icons-vue'
+import dayjs from "dayjs"
+import { PlusOutlined, DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons-vue'
 import useEmployeeStore from "../../stores/employee";
-
+const router = useRouter();
 const employeeStore = useEmployeeStore();
-const { getList } = storeToRefs(employeeStore)
+const { getWorker } = storeToRefs(employeeStore)
+const state = reactive({
+    searchText: '',
+    searchedColumn: '',
+});
+
+const searchInput = ref();
+
 const columns = [
     {
         title: '#',
-        key: 'id',
+        key: 'custom_id',
         width: 50
+    },
+    {
+        title: '写真',
+        key: 'picture',
+        width: 40
     },
     {
         title: '氏名',
         key: 'name',
+        customFilterDropdown: true,
+        onFilterDropdownOpenChange: visible => {
+            if (visible) {
+                setTimeout(() => {
+                    searchInput.value.focus();
+                }, 100);
+            }
+        },
     },
     {
         title: 'フリガナ',
         key: 'furigana',
+        customFilterDropdown: true,
+        onFilterDropdownOpenChange: visible => {
+            if (visible) {
+                setTimeout(() => {
+                    searchInput.value.focus();
+                }, 100);
+            }
+        },
     },
     {
         title: '誕生日',
@@ -31,6 +60,18 @@ const columns = [
         key: 'address',
     },
     {
+        title: '国籍',
+        key: 'nationality',
+    },
+    {
+        title: '在留資格',
+        key: 'visatype',
+    },
+    {
+        title: '就労制限',
+        key: 'workres',
+    },
+    {
         title: '在留期間',
         key: 'pos',
     },
@@ -43,41 +84,108 @@ const columns = [
         key: 'driver_license',
     },
     {
-        title: '職場名',
-        key: 'working_place',
+        title: '就職 / 進学',
+        key: 'advancement',
     },
     {
-        title: '働く期間（プラン）',
-        key: 'working_plan',
+        title: '日本語レベル',
+        key: 'jpnlvl',
     },
     {
-        title: '自己PR',
-        key: 'introduce',
+        title: '急遽連絡先',
+        key: 'urgent',
     },
     {
         title: '',
         key: 'action',
-        width: 50
+        width: 75
     },
 ];
 
+const pgn = ref({})
+
+const edit = (id) => {
+    router.push(`/workers/${id}`)
+}
+
+
+const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    state.searchText = selectedKeys[0];
+    state.searchedColumn = dataIndex;
+};
+
+const handleReset = (clearFilters, key) => {
+    clearFilters({ confirm: true });
+    state.searchText = '';
+};
+
+const fetchWorkerList = async (filters, pagination) => {
+    const pag = await employeeStore.fetchWorkerList(filters, pagination);
+    pgn.value = { ...pag, ...{ pageSize: 1 } }
+}
+
+const handleTableChange = (pagination, filters, sorter, { currentDataSource }) => {
+    fetchWorkerList(filters, pagination)
+}
+
+const dateCalc = (date) => {
+    const currentDateTime = dayjs();
+    const pos = dayjs(date);
+    const futureDateTime = currentDateTime.add(3, 'month');
+    console.log(date)
+    if (futureDateTime.isBefore(pos)) {
+        return 'tw-text-green-500 tw-border tw-border-green-500 tw-border-solid'
+    } else if (currentDateTime.isBefore(pos) && futureDateTime.isAfter(pos)) {
+        return 'tw-text-yellow-500 tw-border tw-border-yellow-500 tw-border-solid'
+    } else if (currentDateTime.isAfter(pos) || currentDateTime.isSame(pos)) {
+        return 'tw-text-red-500 tw-border tw-border-red-500 tw-border-solid'
+    }
+}
+
 onMounted(async () => {
-    await employeeStore.fetchList();
+    fetchWorkerList(null, null)
 })
 </script>
 <template>
     <div>
-        <a-page-header class="demo-page-header" title="Workers" @back="() => $router.go(-1)">
+        <a-page-header class="demo-page-header" title="Worker" @back="() => $router.go(-1)">
             <template #extra>
                 <a-button size="small" key="3">
                     <PlusOutlined #icon @click="() => $router.push('/workers/add')" />
                 </a-button>
             </template>
         </a-page-header>
-        <a-table :dataSource="getList" :columns="columns" size="small" bordered>
+        <a-table :dataSource="getWorker" :columns="columns" size="small" bordered :pagination="pgn"
+            @change="handleTableChange">
+            <template #customFilterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }">
+                <div style="padding: 8px">
+                    <a-input ref="searchInput" :placeholder="`${column.title}`" :value="selectedKeys[0]"
+                        style="width: 188px; margin-bottom: 8px; display: block"
+                        @change="e => setSelectedKeys(e.target.value ? e.target.value : '')"
+                        @pressEnter="handleSearch(selectedKeys, confirm, column.key)" />
+                    <a-button type="primary" size="small" style="width: 90px; margin-right: 8px"
+                        @click="handleSearch(selectedKeys, confirm, column.key)">
+                        <template #icon>
+                            <SearchOutlined />
+                        </template>
+                        Search
+                    </a-button>
+                    <a-button size="small" style="width: 90px" @click="handleReset(clearFilters, column.key)">
+                        Reset
+                    </a-button>
+                </div>
+            </template>
+            <template #customFilterIcon="{ filtered }">
+                <search-outlined :style="{ color: filtered ? '#108ee9' : undefined }" />
+            </template>
             <template #bodyCell="{ column, record }">
-                <template v-if="column.key === 'id'">
-                    {{ record.id }}
+                <template v-if="column.key === 'custom_id'">
+                    {{ record.custom_id }}
+                </template>
+                <template v-if="column.key === 'picture'">
+                    <a-avatar v-if="record.picture" :size="32" :src="record.picture">
+                    </a-avatar>
                 </template>
                 <template v-else-if="column.key === 'name'">
                     {{ record.name }}
@@ -99,22 +207,34 @@ onMounted(async () => {
                     {{ record.pos }}
                 </template>
                 <template v-else-if="column.key === 'pos_date'">
-                    {{ record.pos_date }}
+                    <a-button type="text" :class="dateCalc(record.pos_date)" size="small">{{ record.pos_date }}</a-button>
                 </template>
                 <template v-else-if="column.key === 'driver_license'">
                     {{ record.driver_license_value }}
                 </template>
-                <template v-else-if="column.key === 'working_place'">
-                    {{ record.working_place_value }}
+                <template v-else-if="column.key === 'nationality'">
+                    {{ record.national ? record.national.name_jp : '' }}
                 </template>
-                <template v-else-if="column.key === 'working_plan'">
-                    {{ record.working_plan_value }}
+                <template v-else-if="column.key === 'visatype'">
+                    {{ record.visa_type_value }}
                 </template>
-                <template v-else-if="column.key === 'introduce'">
-                    {{ record.introduce }}
+                <template v-else-if="column.key === 'workres'">
+                    {{ record.work_restrictions ? 'Yes' : 'No' }}
+                </template>
+                <template v-else-if="column.key === 'advancement'">
+                    {{ record.advancement_value }}
+                </template>
+                <template v-else-if="column.key === 'jpnlvl'">
+                    {{ record.japanese_level_value }}
+                </template>
+                <template v-else-if="column.key === 'urgent'">
+                    {{ record.urgent_contact }}
                 </template>
                 <template v-else-if="column.key === 'action'">
-                    <a-button danger>
+                    <a-button @click="edit(record.id)" size="small" class="tw-mr-1">
+                        <EditOutlined #icon />
+                    </a-button>
+                    <a-button size="small" danger>
                         <DeleteOutlined #icon />
                     </a-button>
                 </template>

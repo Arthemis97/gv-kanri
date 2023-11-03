@@ -24,9 +24,16 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::get('/employee', [EmployeeController::class, 'index']);
+    Route::get('/employee/{id}', [EmployeeController::class, 'show']);
     Route::post('/employee', [EmployeeController::class, 'store']);
-    Route::put('/employee/:id', [EmployeeController::class, 'update']);
-    Route::delete('/employee/:id', [EmployeeController::class, 'destroy']);
+    Route::put('/employee/{id}', [EmployeeController::class, 'update']);
+    Route::delete('/employee/{id}', [EmployeeController::class, 'destroy']);
+
+
+    Route::get('/worker', [EmployeeController::class, 'indexWorker']);
+    Route::post('/worker', [EmployeeController::class, 'storeWorker']);
+    Route::get('/nation', [EmployeeController::class, 'getNations']);
+    Route::get('/stats', [EmployeeController::class, 'getStats']);
 });
 
 

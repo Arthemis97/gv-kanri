@@ -1,44 +1,75 @@
 <script setup lang="ts">
+import { onMounted } from "vue";
 import useEmployeeStore from "../../stores/employee";
+import { message } from "ant-design-vue";
 const employeeStore = useEmployeeStore();
 const { getErrors } = storeToRefs(employeeStore)
 const router = useRouter();
+const route = useRoute();
 const form = ref({})
 
 const drlc = [
-    { value: 1, text: "普通免許(AT、MT、第一種、第二種)" },
-    { value: 2, text: "準中型免許" },
-    { value: 3, text: "中型免許(第一種、第二種)" },
-    { value: 4, text: "大型免許(第一種、第二種)" },
-    { value: 5, text: "小型特殊免許" },
-    { value: 6, text: "大型特殊免許(第一種、第二種)" },
-    { value: 7, text: "牽引免許(第一種、第二種)" },
-    { value: 8, text: "普通二輪免許(AT、MT)" },
-    { value: 9, text: "大型二輪免許" },
-    { value: 10, text: "原付免許" },
-    { value: 11, text: "運転免許証なし" }
+    { value: "1", text: "普通免許(AT、MT、第一種、第二種)" },
+    { value: "2", text: "準中型免許" },
+    { value: "3", text: "中型免許(第一種、第二種)" },
+    { value: "4", text: "大型免許(第一種、第二種)" },
+    { value: "5", text: "小型特殊免許" },
+    { value: "6", text: "大型特殊免許(第一種、第二種)" },
+    { value: "7", text: "牽引免許(第一種、第二種)" },
+    { value: "8", text: "普通二輪免許(AT、MT)" },
+    { value: "9", text: "大型二輪免許" },
+    { value: "10", text: "原付免許" },
+    { value: "11", text: "運転免許証なし" }
 ]
 
 const workplace = [
-    { value: 1, text: "中沢乳業社" },
-    { value: 2, text: "相模原" },
-    { value: 3, text: "浦和美園センター" },
-    { value: 4, text: "解体" },
-    { value: 5, text: "引っ越し" }
+    { value: "1", text: "中沢乳業社" },
+    { value: "2", text: "相模原" },
+    { value: "3", text: "浦和美園センター" },
+    { value: "4", text: "解体" },
+    { value: "5", text: "引っ越し" }
 ]
 const workplan = [
-    { value: 1, text: "1年" },
-    { value: 2, text: "2年" },
-    { value: 3, text: "3年" },
-    { value: 4, text: "3年以上" }
+    { value: "1", text: "1年" },
+    { value: "2", text: "2年" },
+    { value: "3", text: "3年" },
+    { value: "4", text: "3年以上" }
 ]
 
 const save = async () => {
-    await employeeStore.store(form.value)
-    if (getErrors.value) {
+    if (form.value.id) {
+        await employeeStore.update(form.value.id, form.value)
+        message.success('Updated')
+        router.push('/employee')
+    } else {
+        await employeeStore.store(form.value)
+        // if (getErrors.value) {
+        // }
+        message.success('Success')
+        router.push('/employee')
     }
-    // router.push('/employee')
 }
+
+const handleImage = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+            form.value.picture = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+onMounted(async () => {
+    if (route.params.id) {
+        const data = await employeeStore.fetchOne(route.params.id)
+        if (data && data.id) {
+            form.value = data
+        }
+    }
+})
 </script>
 <template>
     <a-form class="tw-max-w-[600px]" layout="vertical">
@@ -70,14 +101,14 @@ const save = async () => {
                     </a-select>
                 </a-form-item>
             </a-col>
-            <a-col :span="24">
+            <a-col :span="12">
                 <a-form-item label="写真">
-                    <a-upload name="avatar" list-type="picture-card" :show-upload-list="false">
-                        <div>
-                            <div class="ant-upload-text">Upload</div>
-                        </div>
-                    </a-upload>
+                    <input type="file" accept="image/*" @change="handleImage">
                 </a-form-item>
+            </a-col>
+            <a-col :span="12">
+                <a-avatar v-if="form.picture" :size="128" :src="form.picture">
+                </a-avatar>
             </a-col>
             <a-col :span="24">
                 <a-form-item label="住所">

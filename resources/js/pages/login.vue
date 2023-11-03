@@ -41,7 +41,7 @@ const login = async () => {
                     <a-form-item label="Password">
                         <a-input v-model:value="password" class="tw-w-full" size="large" type="password"></a-input>
                     </a-form-item>
-                    <a-button @click="login()" :loading="loading" type="primary" class="tw-w-full"
+                    <a-button @click="login()" :loading="loading" @keydown.enter="login" type="primary" class="tw-w-full"
                         size="large">Login</a-button>
                 </a-form>
             </div>

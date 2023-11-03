@@ -30,6 +30,15 @@ const routes = [
         },
     },
     {
+        name: "employee-edit",
+        path: "/employee/:id",
+        component: () => import("./pages/employee/form.vue"),
+        meta: {
+            requiresAuth: true,
+            layout: 'defaultLayout'
+        },
+    },
+    {
         name: "workers",
         path: "/workers",
         component: () => import("./pages/workers/index.vue"),
@@ -41,6 +50,15 @@ const routes = [
     {
         name: "workers-add",
         path: "/workers/add",
+        component: () => import("./pages/workers/form.vue"),
+        meta: {
+            requiresAuth: true,
+            layout: 'defaultLayout'
+        },
+    },
+    {
+        name: "workers-edit",
+        path: "/workers/:id",
         component: () => import("./pages/workers/form.vue"),
         meta: {
             requiresAuth: true,
