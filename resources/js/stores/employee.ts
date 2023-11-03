@@ -13,7 +13,7 @@ const useEmployeeStore = defineStore('employee', {
     },
     actions: {
         async fetchList(fltr, pgn) {
-            let url = '/employee?per_page=1'
+            let url = '/employee?per_page=20'
             if (fltr) {
                 url += `&${objectToQueryString(fltr)}`
             }
@@ -54,6 +54,12 @@ const useEmployeeStore = defineStore('employee', {
         },
         async deleteUser(id) {
             const resp = await useRequest.del(`/employee/${id}`);
+            this.list = this.list.filter(i => i.id !== id)
+            return resp.data
+        },
+        async deleteWorker(id) {
+            const resp = await useRequest.del(`/employee/${id}`);
+            this.worker = this.worker.filter(i => i.id !== id)
             return resp.data
         },
         async store(data) {

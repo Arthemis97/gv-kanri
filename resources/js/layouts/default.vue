@@ -25,13 +25,13 @@ const logout = () => {
             </div>
             <a-menu mode="inline">
                 <a-menu-item key="1" @click="push('/')">
-                    <span>Dashboard</span>
+                    <span>ダッシュボード</span>
                 </a-menu-item>
                 <a-menu-item key="2" @click="push('/employee')">
-                    <span>Employee</span>
+                    <span>社員</span>
                 </a-menu-item>
                 <a-menu-item key="3" @click="push('/workers')">
-                    <span>Workers</span>
+                    <span>バイトデーター</span>
                 </a-menu-item>
             </a-menu>
             <div class="tw-absolute tw-bottom-2 tw-text-center tw-px-4 tw-w-full">

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { PlusOutlined, DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons-vue'
+import { Modal } from 'ant-design-vue';
 import useEmployeeStore from "../../stores/employee";
 const router = useRouter();
 const employeeStore = useEmployeeStore();
@@ -109,11 +110,21 @@ const handleReset = (clearFilters, key) => {
 
 const fetchList = async (filters, pagination) => {
     const pag = await employeeStore.fetchList(filters, pagination);
-    pgn.value = { ...pag, ...{ pageSize: 1 } }
+    pgn.value = { ...pag, ...{ pageSize: 20 } }
 }
 
 const handleTableChange = (pagination, filters, sorter, { currentDataSource }) => {
     fetchList(filters, pagination)
+}
+
+const deleteuser = (id) => {
+    Modal.confirm({
+        title: '消してもよろしいですか',
+        async onOk() {
+            await employeeStore.deleteUser(id)
+        },
+        onCancel() { },
+    });
 }
 
 onMounted(async () => {
@@ -122,7 +133,7 @@ onMounted(async () => {
 </script>
 <template>
     <div>
-        <a-page-header class="demo-page-header" title="Employee" @back="() => $router.go(-1)">
+        <a-page-header class="demo-page-header" title="社員" @back="() => $router.go(-1)">
             <template #extra>
                 <a-button size="small" key="3">
                     <PlusOutlined #icon @click="() => $router.push('/employee/add')" />
@@ -198,7 +209,7 @@ onMounted(async () => {
                     <a-button @click="edit(record.id)" size="small" class="tw-mr-1">
                         <EditOutlined #icon />
                     </a-button>
-                    <a-button size="small" danger>
+                    <a-button size="small" danger @click="deleteuser(record.id)">
                         <DeleteOutlined #icon />
                     </a-button>
                 </template>

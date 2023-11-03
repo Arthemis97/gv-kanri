@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import dayjs from "dayjs"
+import { Modal } from 'ant-design-vue';
 import { PlusOutlined, DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons-vue'
 import useEmployeeStore from "../../stores/employee";
 const router = useRouter();
@@ -122,11 +123,22 @@ const handleReset = (clearFilters, key) => {
 
 const fetchWorkerList = async (filters, pagination) => {
     const pag = await employeeStore.fetchWorkerList(filters, pagination);
-    pgn.value = { ...pag, ...{ pageSize: 1 } }
+    pgn.value = { ...pag, ...{ pageSize: 20 } }
 }
 
 const handleTableChange = (pagination, filters, sorter, { currentDataSource }) => {
     fetchWorkerList(filters, pagination)
+}
+
+
+const deleteuser = (id) => {
+    Modal.confirm({
+        title: '消してもよろしいですか',
+        async onOk() {
+            await employeeStore.deleteWorker(id)
+        },
+        onCancel() { },
+    });
 }
 
 const dateCalc = (date) => {
@@ -149,7 +161,7 @@ onMounted(async () => {
 </script>
 <template>
     <div>
-        <a-page-header class="demo-page-header" title="Worker" @back="() => $router.go(-1)">
+        <a-page-header class="demo-page-header" title="バイトデーター" @back="() => $router.go(-1)">
             <template #extra>
                 <a-button size="small" key="3">
                     <PlusOutlined #icon @click="() => $router.push('/workers/add')" />
@@ -234,7 +246,7 @@ onMounted(async () => {
                     <a-button @click="edit(record.id)" size="small" class="tw-mr-1">
                         <EditOutlined #icon />
                     </a-button>
-                    <a-button size="small" danger>
+                    <a-button size="small" danger @click="deleteuser(record.id)">
                         <DeleteOutlined #icon />
                     </a-button>
                 </template>
