@@ -127,13 +127,17 @@ const deleteuser = (id) => {
     });
 }
 
+const showModal = (data) => {
+    useEvent.emit('modal:profile:open', data)
+}
+
 onMounted(async () => {
     fetchList(null, null)
 })
 </script>
 <template>
     <div>
-        <a-page-header class="demo-page-header" title="社員" @back="() => $router.go(-1)">
+        <a-page-header class="demo-page-header" title="正社員データ" @back="() => $router.go(-1)">
             <template #extra>
                 <a-button size="small" key="3">
                     <PlusOutlined #icon @click="() => $router.push('/employee/add')" />
@@ -168,7 +172,7 @@ onMounted(async () => {
                     {{ record.id }}
                 </template>
                 <template v-if="column.key === 'picture'">
-                    <a-avatar v-if="record.picture" :size="32" :src="record.picture">
+                    <a-avatar @click="showModal(record)" v-if="record.picture" :size="32" :src="record.picture">
                     </a-avatar>
                 </template>
                 <template v-else-if="column.key === 'name'">
@@ -188,7 +192,7 @@ onMounted(async () => {
                         :ellipsis="{ tooltip: record.address ? record.address : '' }" :content="record.address" />
                 </template>
                 <template v-else-if="column.key === 'pos'">
-                    {{ record.pos }}
+                    {{ record.pos_value }}
                 </template>
                 <template v-else-if="column.key === 'pos_date'">
                     {{ record.pos_date }}

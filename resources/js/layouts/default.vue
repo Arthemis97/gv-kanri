@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import useAuthStore from "../stores/auth"
 import { Modal } from 'ant-design-vue';
+import profile from "../components/profile.vue";
 const authStore = useAuthStore()
 const router = useRouter()
 
@@ -28,10 +29,10 @@ const logout = () => {
                     <span>ダッシュボード</span>
                 </a-menu-item>
                 <a-menu-item key="2" @click="push('/employee')">
-                    <span>社員</span>
+                    <span>正社員データ</span>
                 </a-menu-item>
                 <a-menu-item key="3" @click="push('/workers')">
-                    <span>バイトデーター</span>
+                    <span>GVデータ</span>
                 </a-menu-item>
             </a-menu>
             <div class="tw-absolute tw-bottom-2 tw-text-center tw-px-4 tw-w-full">
@@ -42,6 +43,7 @@ const logout = () => {
             <a-layout-content style="margin: 16px">
                 <div :style="{ padding: '24px', background: '#fff', minHeight: '360px' }">
                     <slot />
+                    <profile />
                 </div>
             </a-layout-content>
         </a-layout>

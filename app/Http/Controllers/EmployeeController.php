@@ -23,7 +23,7 @@ class EmployeeController extends Controller
         }
 
 
-        $employees = $employees->orderBy('created_at', 'desc')->paginate($per_page);
+        $employees = $employees->orderBy('id', 'asc')->paginate($per_page);
 
         $employees->getCollection()->transform(function ($employee) {
             $employee->working_place_value = $employee->working_place_value;
@@ -32,6 +32,7 @@ class EmployeeController extends Controller
             $employee->visa_type_value = $employee->visa_type_value;
             $employee->advancement_value = $employee->advancement_value;
             $employee->japanese_level_value = $employee->japanese_level_value;
+            $employee->pos_value = $employee->pos_value;
             return $employee;
         });
         return $employees;
@@ -52,7 +53,7 @@ class EmployeeController extends Controller
         }
 
 
-        $employees = $employees->orderBy('created_at', 'desc')->paginate($per_page);
+        $employees = $employees->orderBy('id', 'asc')->paginate($per_page);
 
         $employees->getCollection()->transform(function ($employee) {
             $employee->working_place_value = $employee->working_place_value;
@@ -61,6 +62,7 @@ class EmployeeController extends Controller
             $employee->visa_type_value = $employee->visa_type_value;
             $employee->advancement_value = $employee->advancement_value;
             $employee->japanese_level_value = $employee->japanese_level_value;
+            $employee->pos_value = $employee->pos_value;
             return $employee;
         });
         return $employees;

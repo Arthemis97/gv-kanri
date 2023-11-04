@@ -109,6 +109,9 @@ const edit = (id) => {
     router.push(`/workers/${id}`)
 }
 
+const showModal = (data) => {
+    useEvent.emit('modal:profile:open', data)
+}
 
 const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -145,7 +148,6 @@ const dateCalc = (date) => {
     const currentDateTime = dayjs();
     const pos = dayjs(date);
     const futureDateTime = currentDateTime.add(3, 'month');
-    console.log(date)
     if (futureDateTime.isBefore(pos)) {
         return 'tw-text-green-500 tw-border tw-border-green-500 tw-border-solid'
     } else if (currentDateTime.isBefore(pos) && futureDateTime.isAfter(pos)) {
@@ -161,7 +163,7 @@ onMounted(async () => {
 </script>
 <template>
     <div>
-        <a-page-header class="demo-page-header" title="バイトデーター" @back="() => $router.go(-1)">
+        <a-page-header class="demo-page-header" title="GVデータ" @back="() => $router.go(-1)">
             <template #extra>
                 <a-button size="small" key="3">
                     <PlusOutlined #icon @click="() => $router.push('/workers/add')" />
@@ -196,7 +198,7 @@ onMounted(async () => {
                     {{ record.custom_id }}
                 </template>
                 <template v-if="column.key === 'picture'">
-                    <a-avatar v-if="record.picture" :size="32" :src="record.picture">
+                    <a-avatar @click="showModal(record)" v-if="record.picture" :size="32" :src="record.picture">
                     </a-avatar>
                 </template>
                 <template v-else-if="column.key === 'name'">
@@ -216,7 +218,7 @@ onMounted(async () => {
                         :ellipsis="{ tooltip: record.address ? record.address : '' }" :content="record.address" />
                 </template>
                 <template v-else-if="column.key === 'pos'">
-                    {{ record.pos }}
+                    {{ record.pos_value }}
                 </template>
                 <template v-else-if="column.key === 'pos_date'">
                     <a-button type="text" :class="dateCalc(record.pos_date)" size="small">{{ record.pos_date }}</a-button>

@@ -23,17 +23,27 @@ const drlc = [
 ]
 
 const workplace = [
-    { value: "1", text: "中沢乳業社" },
-    { value: "2", text: "相模原" },
-    { value: "3", text: "浦和美園センター" },
-    { value: "4", text: "解体" },
-    { value: "5", text: "引っ越し" }
+    { value: '1', text: "事務" },
+    { value: '2', text: "中沢乳業社" },
+    { value: '3', text: "相模原" },
+    { value: '4', text: "浦和美園センター" },
+    { value: '5', text: "太田市場" },
+    { value: '6', text: "運転者" },
+    { value: '7', text: "公徳" },
+    { value: '8', text: "その他" },
 ]
 const workplan = [
     { value: "1", text: "1年" },
     { value: "2", text: "2年" },
     { value: "3", text: "3年" },
     { value: "4", text: "3年以上" }
+]
+
+const pos = [
+    { value: "1", text: "1年3ヶ月" },
+    { value: "2", text: "3年" },
+    { value: "3", text: "5年" },
+    { value: "4", text: "5年以降" }
 ]
 
 const save = async () => {
@@ -117,9 +127,13 @@ onMounted(async () => {
                 </a-form-item>
             </a-col>
             <a-col :span="12">
+
                 <a-form-item label="在留期間">
-                    <a-input placeholder="在留期間" v-model:value="form.pos"
-                        :status="getErrors && getErrors.errors.pos ? 'error' : ''" />
+                    <a-select placeholder="在留期間" v-model:value="form.pos"
+                        :status="getErrors && getErrors.errors.pos ? 'error' : ''">
+                        <a-select-option v-for="(i, i_index) in pos" :value="i.value" :key="i_index">{{ i.text
+                        }}</a-select-option>
+                    </a-select>
                 </a-form-item>
             </a-col>
             <a-col :span="12">

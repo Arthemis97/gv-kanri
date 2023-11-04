@@ -25,39 +25,35 @@ const drlc = [
     { value: "11", text: "運転免許証なし" }
 ]
 
-const workplace = [
-    { value: "1", text: "中沢乳業社" },
-    { value: "2", text: "相模原" },
-    { value: "3", text: "浦和美園センター" },
-    { value: "4", text: "解体" },
-    { value: "5", text: "引っ越し" }
-]
-const workplan = [
-    { value: "1", text: "1年" },
-    { value: "2", text: "2年" },
-    { value: "3", text: "3年" },
-    { value: "4", text: "3年以上" }
-]
 const visatype = [
-    { value: "1", text: "外交 " },
-    { value: "2", text: "公用" },
-    { value: "3", text: "教授" },
-    { value: "4", text: "芸術" },
-    { value: "5", text: "宗教" },
-    { value: "6", text: "報道" },
-    { value: "7", text: "高度専門職" },
-    { value: "8", text: "経営・管理" },
-    { value: "9", text: "法律・会計業務" },
-    { value: "10", text: "医療" },
-    { value: "11", text: "研究" },
-    { value: "12", text: "教育" },
-    { value: "13", text: "技術・人文知" },
-    { value: "14", text: "識・国際業務" },
-    { value: "15", text: "企業内転勤" },
-    { value: "16", text: "介護（※１）" },
-    { value: "17", text: "興行" },
-    { value: "18", text: "技能" },
-    { value: "19", text: "技能実習" }
+    { value: '1', text: "外交 " },
+    { value: '2', text: "公用" },
+    { value: '3', text: "教授" },
+    { value: '4', text: "芸術" },
+    { value: '5', text: "宗教" },
+    { value: '6', text: "報道" },
+    { value: '7', text: "高度専門職" },
+    { value: '8', text: "経営・管理" },
+    { value: '9', text: "法律・会計業務" },
+    { value: '10', text: "医療" },
+    { value: '11', text: "研究" },
+    { value: '12', text: "教育" },
+    { value: '13', text: "技術・人文知識・国際業務" },
+    { value: '14', text: "企業内転勤" },
+    { value: '15', text: "介護（※１）" },
+    { value: '16', text: "興行" },
+    { value: '17', text: "技能" },
+    { value: '18', text: "技能実習" },
+    { value: '19', text: "文化活動" },
+    { value: '20', text: "短期滞在" },
+    { value: '21', text: "留学" },
+    { value: '22', text: "研修" },
+    { value: '23', text: "家族滞在" },
+    { value: '24', text: "特定活動" },
+    { value: '25', text: "永住者" },
+    { value: '26', text: "日本人の配偶者等" },
+    { value: '27', text: "永住者の配偶者等" },
+    { value: '28', text: "定住者" }
 ]
 const advancement = [
     { value: "1", text: "就職" },
@@ -72,6 +68,12 @@ const jpnlvl = [
     { value: "4", text: "N4" },
     { value: "5", text: "N5" },
     { value: "6", text: "NO" }
+]
+const pos = [
+    { value: "1", text: "1年3ヶ月" },
+    { value: "2", text: "3年" },
+    { value: "3", text: "5年" },
+    { value: "4", text: "5年以降" }
 ]
 
 const save = async () => {
@@ -234,8 +236,11 @@ onMounted(async () => {
             </a-col>
             <a-col :span="12">
                 <a-form-item label="在留期間">
-                    <a-input placeholder="在留期間" v-model:value="form.pos"
-                        :status="getErrors && getErrors.errors.pos ? 'error' : ''" />
+                    <a-select placeholder="在留期間" v-model:value="form.pos"
+                        :status="getErrors && getErrors.errors.pos ? 'error' : ''">
+                        <a-select-option v-for="(i, i_index) in pos" :value="i.value" :key="i_index">{{ i.text
+                        }}</a-select-option>
+                    </a-select>
                 </a-form-item>
             </a-col>
             <a-col :span="12">
