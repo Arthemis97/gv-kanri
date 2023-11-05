@@ -60,6 +60,10 @@ const columns = [
         key: 'address',
     },
     {
+        title: '電話番',
+        key: 'phone_number',
+    },
+    {
         title: '在留期間',
         key: 'pos',
     },
@@ -177,6 +181,9 @@ onMounted(async () => {
                 </template>
                 <template v-else-if="column.key === 'name'">
                     {{ record.name }}
+                </template>
+                <template v-else-if="column.key === 'phone_number'">
+                    {{ record.phone_number }}
                 </template>
                 <template v-else-if="column.key === 'furigana'">
                     {{ record.furigana }}

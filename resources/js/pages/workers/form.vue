@@ -142,6 +142,12 @@ onMounted(async () => {
                         :status="getErrors && getErrors.errors.dob ? 'error' : ''" />
                 </a-form-item>
             </a-col>
+            <a-col :span="24">
+                <a-form-item label="電話番">
+                    <a-input placeholder="電話番" v-model:value="form.phone_number"
+                        :status="getErrors && getErrors.errors.phone_number ? 'error' : ''" />
+                </a-form-item>
+            </a-col>
             <a-col :span="12">
                 <a-form-item label="写真">
                     <input type="file" accept="image/*" @change="handleImage">

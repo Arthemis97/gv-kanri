@@ -112,6 +112,18 @@ onMounted(async () => {
                 </a-form-item>
             </a-col>
             <a-col :span="12">
+                <a-form-item label="電話番">
+                    <a-input placeholder="電話番" v-model:value="form.phone_number"
+                        :status="getErrors && getErrors.errors.phone_number ? 'error' : ''" />
+                </a-form-item>
+            </a-col>
+            <a-col :span="24">
+                <a-form-item label="住所">
+                    <a-input placeholder="住所" v-model:value="form.address"
+                        :status="getErrors && getErrors.errors.address ? 'error' : ''" />
+                </a-form-item>
+            </a-col>
+            <a-col :span="12">
                 <a-form-item label="写真">
                     <input type="file" accept="image/*" @change="handleImage">
                 </a-form-item>
@@ -119,12 +131,6 @@ onMounted(async () => {
             <a-col :span="12">
                 <a-avatar v-if="form.picture" :size="128" :src="form.picture">
                 </a-avatar>
-            </a-col>
-            <a-col :span="24">
-                <a-form-item label="住所">
-                    <a-input placeholder="住所" v-model:value="form.address"
-                        :status="getErrors && getErrors.errors.address ? 'error' : ''" />
-                </a-form-item>
             </a-col>
             <a-col :span="12">
 

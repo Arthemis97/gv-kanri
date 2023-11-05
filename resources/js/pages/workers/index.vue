@@ -61,6 +61,10 @@ const columns = [
         key: 'address',
     },
     {
+        title: '電話番',
+        key: 'phone_number',
+    },
+    {
         title: '国籍',
         key: 'nationality',
     },
@@ -212,6 +216,9 @@ onMounted(async () => {
                 </template>
                 <template v-else-if="column.key === 'gender'">
                     {{ record.gender ? '男' : '女' }}
+                </template>
+                <template v-else-if="column.key === 'phone_number'">
+                    {{ record.phone_number }}
                 </template>
                 <template v-else-if="column.key === 'address'">
                     <a-typography-text :style="{ width: '100px' }"
