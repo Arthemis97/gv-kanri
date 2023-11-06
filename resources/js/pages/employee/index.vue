@@ -11,6 +11,7 @@ const state = reactive({
 });
 
 const searchInput = ref();
+const search_value = ref("")
 
 const columns = [
     {
@@ -60,7 +61,7 @@ const columns = [
         key: 'address',
     },
     {
-        title: '電話番',
+        title: '電話番号',
         key: 'phone_number',
     },
     {
@@ -121,6 +122,10 @@ const handleTableChange = (pagination, filters, sorter, { currentDataSource }) =
     fetchList(filters, pagination)
 }
 
+const onSearch = async () => {
+    fetchList({ search: search_value.value }, null)
+}
+
 const deleteuser = (id) => {
     Modal.confirm({
         title: '消してもよろしいですか',
@@ -143,6 +148,8 @@ onMounted(async () => {
     <div>
         <a-page-header class="demo-page-header" title="正社員データ" @back="() => $router.go(-1)">
             <template #extra>
+                <a-input-search size="small" v-model:value="search_value" placeholder="Search..." style="width: 200px"
+                    @search="onSearch" />
                 <a-button size="small" key="3">
                     <PlusOutlined #icon @click="() => $router.push('/employee/add')" />
                 </a-button>

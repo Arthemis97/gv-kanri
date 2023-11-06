@@ -61,7 +61,7 @@ const columns = [
         key: 'address',
     },
     {
-        title: '電話番',
+        title: '電話番号',
         key: 'phone_number',
     },
     {
@@ -108,6 +108,7 @@ const columns = [
 ];
 
 const pgn = ref({})
+const search_value = ref("")
 
 const edit = (id) => {
     router.push(`/workers/${id}`)
@@ -161,6 +162,10 @@ const dateCalc = (date) => {
     }
 }
 
+const onSearch = async () => {
+    fetchWorkerList({ search: search_value.value }, null)
+}
+
 onMounted(async () => {
     fetchWorkerList(null, null)
 })
@@ -169,6 +174,8 @@ onMounted(async () => {
     <div>
         <a-page-header class="demo-page-header" title="GVデータ" @back="() => $router.go(-1)">
             <template #extra>
+                <a-input-search size="small" v-model:value="search_value" placeholder="Search..." style="width: 200px"
+                    @search="onSearch" />
                 <a-button size="small" key="3">
                     <PlusOutlined #icon @click="() => $router.push('/workers/add')" />
                 </a-button>

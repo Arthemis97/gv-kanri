@@ -79,7 +79,7 @@ const useEmployeeStore = defineStore('employee', {
             if (resp.resp.status == 422) {
                 this.errors = resp.data
             }
-        }
+        },
     },
 });
 export default useEmployeeStore

@@ -17,7 +17,7 @@ useEvent.on(('modal:profile:open'), (data) =>{
             <div class="tw-text-center">
                 <h2 class="tw-text-xl tw-font-semibold">{{ record.name }}</h2>
                 <span class="tw-block tw-pb-2 tw-text-sm"><b>フリガナ:</b> {{ record.furigana }}</span>
-                <span class="tw-block tw-pb-2 tw-text-sm"><b>電話番:</b> {{ record.phone_number }}</span>
+                <span class="tw-block tw-pb-2 tw-text-sm"><b>電話番号:</b> {{ record.phone_number }}</span>
                 <span class="tw-block tw-pb-2 tw-text-sm"><b>住所:</b> {{ record.address }}</span>
 
             </div>

@@ -145,6 +145,10 @@ class User extends Authenticatable
             "2" => "3年",
             "3" => "5年",
             "4" => "5年以降"
+        ],
+        'gender' => [
+            "0" => "女",
+            "1" => "男"
         ]
     ];
 
@@ -163,6 +167,56 @@ class User extends Authenticatable
         return $query->where('is_employee', 'worker');
     }
 
+    public function scopeFilterByWorkingPlace($query, $workingPlaceValue)
+    {
+        return $query->where(function ($query) use ($workingPlaceValue) {
+            $query->where('working_place', array_search($workingPlaceValue, $this->enumMappings['working_place']));
+        });
+    }
+    public function scopeFilterByDriverLicense($query, $value)
+    {
+        return $query->where(function ($query) use ($value) {
+            $query->where('driver_license', array_search($value, $this->enumMappings['driver_license']));
+        });
+    }
+    public function scopeFilterByWorkingPlan($query, $value)
+    {
+        return $query->where(function ($query) use ($value) {
+            $query->where('working_plan', array_search($value, $this->enumMappings['working_plan']));
+        });
+    }
+    public function scopeFilterByVisaType($query, $value)
+    {
+        return $query->where(function ($query) use ($value) {
+            $query->where('visa_type', array_search($value, $this->enumMappings['visa_type']));
+        });
+    }
+    public function scopeFilterByAdvancement($query, $value)
+    {
+        return $query->where(function ($query) use ($value) {
+            $query->where('advancement', array_search($value, $this->enumMappings['advancement']));
+        });
+    }
+    public function scopeFilterByJapaneseLevel($query, $value)
+    {
+        return $query->where(function ($query) use ($value) {
+            $query->where('japanese_level', array_search($value, $this->enumMappings['japanese_level']));
+        });
+    }
+
+    public function scopeFilterByPos($query, $value)
+    {
+        return $query->where(function ($query) use ($value) {
+            $query->where('pos', array_search($value, $this->enumMappings['pos']));
+        });
+    }
+
+    public function scopeFilterByGender($query, $value)
+    {
+        return $query->where(function ($query) use ($value) {
+            $query->where('gender', array_search($value, $this->enumMappings['gender']));
+        });
+    }
     public function getWorkingPlaceValueAttribute()
     {
         if ($this->attributes['working_place']) {

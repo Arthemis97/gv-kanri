@@ -18,8 +18,48 @@ class EmployeeController extends Controller
 
         $employees = User::employee();
 
-        if ($request->has('name')) {
-            $employees = $employees->where('name', 'like', '%' . $request->get('name') . '%');
+        // if ($request->has('name')) {
+        //     $employees = $employees->where('name', 'like', '%' . $request->get('name') . '%');
+        // }
+        if ($request->has('search')) {
+            $search = $request->get('search');
+            $employees = $employees
+                ->where(function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%')
+                        ->orWhere('furigana', 'like', '%' . $search . '%')
+                        ->orWhere('phone_number', 'like', '%' . $search . '%')
+                        ->orWhere('dob', 'like', '%' . $search . '%')
+                        ->orWhere('address', 'like', '%' . $search . '%')
+                        ->orWhere('introduce', 'like', '%' . $search . '%')
+                        ->orWhere('pos_date', 'like', '%' . $search . '%')
+                        ->orWhereHas('national', function ($query) use ($search) {
+                            $query->where('name', 'like', '%' . $search . '%');
+                        })
+                        ->orWhere(function ($query) use ($search) {
+                            $query->filterByWorkingPlace($search);
+                        })
+                        ->orWhere(function ($query) use ($search) {
+                            $query->FilterByDriverLicense($search);
+                        })
+                        ->orWhere(function ($query) use ($search) {
+                            $query->FilterByWorkingPlan($search);
+                        })
+                        ->orWhere(function ($query) use ($search) {
+                            $query->FilterByVisaType($search);
+                        })
+                        ->orWhere(function ($query) use ($search) {
+                            $query->FilterByAdvancement($search);
+                        })
+                        ->orWhere(function ($query) use ($search) {
+                            $query->FilterByJapaneseLevel($search);
+                        })
+                        ->orWhere(function ($query) use ($search) {
+                            $query->FilterByPos($search);
+                        })
+                        ->orWhere(function ($query) use ($search) {
+                            $query->FilterByGender($search);
+                        });
+                });
         }
 
 
@@ -48,8 +88,49 @@ class EmployeeController extends Controller
 
         $employees = User::worker()->with(['national']);
 
-        if ($request->has('name')) {
-            $employees = $employees->where('name', 'like', '%' . $request->get('name') . '%');
+        // if ($request->has('name')) {
+        //     $employees = $employees->where('name', 'like', '%' . $request->get('name') . '%');
+        // }
+
+        if ($request->has('search')) {
+            $search = $request->get('search');
+            $employees = $employees
+                ->where(function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%')
+                        ->orWhere('furigana', 'like', '%' . $search . '%')
+                        ->orWhere('phone_number', 'like', '%' . $search . '%')
+                        ->orWhere('dob', 'like', '%' . $search . '%')
+                        ->orWhere('address', 'like', '%' . $search . '%')
+                        ->orWhere('introduce', 'like', '%' . $search . '%')
+                        ->orWhere('pos_date', 'like', '%' . $search . '%')
+                        ->orWhereHas('national', function ($query) use ($search) {
+                            $query->where('name', 'like', '%' . $search . '%');
+                        })
+                        ->orWhere(function ($query) use ($search) {
+                            $query->filterByWorkingPlace($search);
+                        })
+                        ->orWhere(function ($query) use ($search) {
+                            $query->FilterByDriverLicense($search);
+                        })
+                        ->orWhere(function ($query) use ($search) {
+                            $query->FilterByWorkingPlan($search);
+                        })
+                        ->orWhere(function ($query) use ($search) {
+                            $query->FilterByVisaType($search);
+                        })
+                        ->orWhere(function ($query) use ($search) {
+                            $query->FilterByAdvancement($search);
+                        })
+                        ->orWhere(function ($query) use ($search) {
+                            $query->FilterByJapaneseLevel($search);
+                        })
+                        ->orWhere(function ($query) use ($search) {
+                            $query->FilterByPos($search);
+                        })
+                        ->orWhere(function ($query) use ($search) {
+                            $query->FilterByGender($search);
+                        });
+                });
         }
 
 
