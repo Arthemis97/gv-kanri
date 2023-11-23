@@ -299,4 +299,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Relation::class, 'user_id');
     }
+    public function prefecture()
+    {
+        return $this->hasOne(Prefecture::class, 'id', 'prefecture_id');
+    }
 }
