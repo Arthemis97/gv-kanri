@@ -11,7 +11,7 @@ onMounted(async () => {
 })
 </script>
 <template>
-    <div v-if="Object.keys(data).length > 0" class="tw-grid tw-grid-cols-3 tw-gap-4">
+    <div v-if="Object.keys(data).length > 0" class="tw-grid tw-grid-cols-5 tw-gap-4">
         <a-card size="small">
             <gender :data="data.gender" />
         </a-card>
