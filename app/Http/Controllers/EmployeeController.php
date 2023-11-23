@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\National;
+use App\Models\Prefecture;
+use App\Models\Relation;
 use App\Models\User;
+use App\Models\Work_place;
 use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
@@ -16,7 +19,7 @@ class EmployeeController extends Controller
             $per_page = $request->get('per_page');
         }
 
-        $employees = User::employee();
+        $employees = User::employee()->with(['relation']);
 
         // if ($request->has('name')) {
         //     $employees = $employees->where('name', 'like', '%' . $request->get('name') . '%');
@@ -73,6 +76,7 @@ class EmployeeController extends Controller
             $employee->advancement_value = $employee->advancement_value;
             $employee->japanese_level_value = $employee->japanese_level_value;
             $employee->pos_value = $employee->pos_value;
+            $employee->manager_value = $employee->manager_value;
             return $employee;
         });
         return $employees;
@@ -169,7 +173,24 @@ class EmployeeController extends Controller
         $this->validate($request, $rules);
         $data = $request->all();
         $data['is_employee'] = 'employee';
-        return User::create($data);
+
+        $newuser = User::create($data);
+
+        if (isset($data['relation'])) {
+            foreach ($data['relation'] as $key => $value) {
+                Relation::create([
+                    'name' => $value['name'],
+                    'furigana' => $value['furigana'],
+                    'gender' => $value['gender'],
+                    'resisdence_card_number' => $value['resisdence_card_number'],
+                    'my_number' => $value['my_number'],
+                    'dependent' => $value['dependent'],
+                    'user_id' => $newuser->id,
+                ]);
+            }
+        }
+
+        return $newuser;
     }
 
 
@@ -196,7 +217,7 @@ class EmployeeController extends Controller
 
     public function show($id)
     {
-        return User::findOrFail($id);
+        return User::with(['relation'])->findOrFail($id);
     }
 
     public function update(Request $request, $id)
@@ -204,6 +225,23 @@ class EmployeeController extends Controller
         $emp = User::findOrFail($id);
         $emp->fill($request->all());
         $emp->save();
+
+
+        if (isset($request->all()['relation'])) {
+            Relation::where('user_id', $id)->delete();
+            foreach ($request->all()['relation'] as $key => $value) {
+                Relation::create([
+                    'name' => $value['name'],
+                    'furigana' => $value['furigana'],
+                    'gender' => $value['gender'],
+                    'resisdence_card_number' => $value['resisdence_card_number'],
+                    'my_number' => $value['my_number'],
+                    'dependent' => $value['dependent'],
+                    'user_id' => $id,
+                ]);
+            }
+        }
+
         return $emp;
     }
 
@@ -281,5 +319,14 @@ class EmployeeController extends Controller
             "visa" => $visa,
             "jpn" => $jpn,
         ]);
+    }
+
+    public function getPrefecture()
+    {
+        return Prefecture::all();
+    }
+    public function getWorkPlace()
+    {
+        return Work_place::all();
     }
 }

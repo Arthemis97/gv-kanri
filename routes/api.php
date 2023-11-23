@@ -32,10 +32,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/worker', [EmployeeController::class, 'indexWorker']);
     Route::post('/worker', [EmployeeController::class, 'storeWorker']);
-    Route::get('/nation', [EmployeeController::class, 'getNations']);
-    Route::get('/stats', [EmployeeController::class, 'getStats']);
+
+
 });
 
-
+Route::get('/nation', [EmployeeController::class, 'getNations']);
+Route::get('/stats', [EmployeeController::class, 'getStats']);
+Route::get('/prefecture', [EmployeeController::class, 'getPrefecture']);
+Route::get('/work_place', [EmployeeController::class, 'getWorkPlace']);
 
 Route::post('/login', [AuthController::class, 'login']);

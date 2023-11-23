@@ -6,7 +6,7 @@ import useNationStore from "../../stores/nation";
 const employeeStore = useEmployeeStore();
 const nationStore = useNationStore()
 const { getErrors } = storeToRefs(employeeStore)
-const { getList } = storeToRefs(nationStore)
+const { getList, getPrefecture, getWorkplace } = storeToRefs(nationStore)
 const router = useRouter();
 const route = useRoute();
 const form = ref({})
@@ -149,6 +149,19 @@ onMounted(async () => {
                 </a-form-item>
             </a-col>
             <a-col :span="12">
+                <a-form-item label="都道府県">
+                    <a-select placeholder="都道府県" v-model:value="form.prefecture_id" show-search
+                        :filter-option="filterOption" :status="getErrors && getErrors.errors.prefecture_id ? 'error' : ''">
+                        <a-select-option v-for="(pr, pr_id) in getPrefecture" :key="pr_id" :label="pr.name"
+                            :value="pr.id">{{
+                                pr.name }}</a-select-option>
+                    </a-select>
+                </a-form-item>
+            </a-col>
+            <a-col :span="12">
+
+            </a-col>
+            <a-col :span="12">
                 <a-form-item label="写真">
                     <input type="file" accept="image/*" @change="handleImage">
                 </a-form-item>
@@ -193,6 +206,14 @@ onMounted(async () => {
                 </a-form-item>
             </a-col>
 
+
+            <a-col :span="12">
+                <a-form-item label="在留カード番号">
+                    <a-input placeholder="在留カード番号" v-model:value="form.resisdence_card_number"
+                        :status="getErrors && getErrors.errors.resisdence_card_number ? 'error' : ''" />
+                </a-form-item>
+            </a-col>
+
             <a-col :span="12">
                 <a-form-item label="就労制限">
                     <a-select placeholder="就労制限" v-model:value="form.work_restrictions"
@@ -228,8 +249,8 @@ onMounted(async () => {
 
 
             <a-col :span="12">
-                <a-form-item label="急遽連絡先">
-                    <a-input placeholder="急遽連絡先" v-model:value="form.urgent_contact"
+                <a-form-item label="緊急連絡先">
+                    <a-input placeholder="緊急連絡先" v-model:value="form.urgent_contact"
                         :status="getErrors && getErrors.errors.urgent_contact ? 'error' : ''" />
                 </a-form-item>
             </a-col>
@@ -255,6 +276,41 @@ onMounted(async () => {
                         v-model:value="form.pos_date" :status="getErrors && getErrors.errors.pos_date ? 'error' : ''" />
                 </a-form-item>
             </a-col>
+
+            <a-col :span="12">
+                <a-form-item label="登録日">
+                    <a-date-picker valueFormat="YYYY-MM-DD" placeholder="登録日" class="tw-w-full"
+                        v-model:value="form.registred_day"
+                        :status="getErrors && getErrors.errors.registred_day ? 'error' : ''" />
+                </a-form-item>
+            </a-col>
+
+
+            <a-col :span="12">
+                <a-form-item label="現場名">
+                    <a-select placeholder="現場名" v-model:value="form.work_place_id" show-search :filter-option="filterOption"
+                        :status="getErrors && getErrors.errors.work_place_id ? 'error' : ''">
+                        <a-select-option v-for="(wp, wp_id) in getWorkplace" :key="wp_id" :label="wp.name" :value="wp.id">{{
+                            wp.name }}</a-select-option>
+                    </a-select>
+                </a-form-item>
+            </a-col>
+
+
+            <a-col :span="12">
+                <a-form-item label="緊急連絡先名">
+                    <a-input placeholder="緊急連絡先名" v-model:value="form.emergency_contact_name"
+                        :status="getErrors && getErrors.errors.emergency_contact_name ? 'error' : ''" />
+                </a-form-item>
+            </a-col>
+
+            <a-col :span="12">
+                <a-form-item label="業務開始日">
+                    <a-date-picker valueFormat="YYYY-MM-DD" placeholder="業務開始日" class="tw-w-full"
+                        v-model:value="form.start_date" :status="getErrors && getErrors.errors.start_date ? 'error' : ''" />
+                </a-form-item>
+            </a-col>
+
             <a-col :span="24">
                 <a-form-item label="運転免許">
                     <a-select placeholder="運転免許" v-model:value="form.driver_license"

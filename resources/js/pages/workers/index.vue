@@ -3,9 +3,12 @@ import dayjs from "dayjs"
 import { Modal } from 'ant-design-vue';
 import { PlusOutlined, DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons-vue'
 import useEmployeeStore from "../../stores/employee";
+import useNationStore from "../../stores/nation";
 const router = useRouter();
 const employeeStore = useEmployeeStore();
+const nationStore = useNationStore();
 const { getWorker } = storeToRefs(employeeStore)
+const { getPrefecture, getWorkplace } = storeToRefs(nationStore)
 const state = reactive({
     searchText: '',
     searchedColumn: '',
@@ -17,11 +20,13 @@ const columns = [
     {
         title: '#',
         key: 'custom_id',
+        fixed: 'left',
         width: 50
     },
     {
         title: '写真',
         key: 'picture',
+        fixed: 'left',
         width: 40
     },
     {
@@ -35,6 +40,7 @@ const columns = [
                 }, 100);
             }
         },
+        fixed: 'left',
     },
     {
         title: 'フリガナ',
@@ -47,6 +53,7 @@ const columns = [
                 }, 100);
             }
         },
+        fixed: 'left',
     },
     {
         title: '誕生日',
@@ -65,12 +72,20 @@ const columns = [
         key: 'phone_number',
     },
     {
+        title: '都道府県',
+        key: 'prefecture',
+    },
+    {
         title: '国籍',
         key: 'nationality',
     },
     {
         title: '在留資格',
         key: 'visatype',
+    },
+    {
+        title: '在留カード番号',
+        key: 'res_card_number',
     },
     {
         title: '就労制限',
@@ -89,6 +104,18 @@ const columns = [
         key: 'driver_license',
     },
     {
+        title: '登録日',
+        key: 'register_day',
+    },
+    {
+        title: '業務開始日',
+        key: 'start_date',
+    },
+    {
+        title: '現場名',
+        key: 'work_place',
+    },
+    {
         title: '就職 / 進学',
         key: 'advancement',
     },
@@ -97,13 +124,18 @@ const columns = [
         key: 'jpnlvl',
     },
     {
-        title: '急遽連絡先',
+        title: '緊急連絡先',
         key: 'urgent',
+    },
+    {
+        title: '緊急連絡先名',
+        key: 'emergency_contact_name',
     },
     {
         title: '',
         key: 'action',
-        width: 75
+        width: 75,
+        fixed: 'right',
     },
 ];
 
@@ -176,13 +208,13 @@ onMounted(async () => {
             <template #extra>
                 <a-input-search size="small" v-model:value="search_value" placeholder="Search..." style="width: 200px"
                     @search="onSearch" />
-                <a-button size="small" key="3">
-                    <PlusOutlined #icon @click="() => $router.push('/workers/add')" />
+                <a-button size="small" key="3" @click="() => $router.push('/workers/add')">
+                    <PlusOutlined #icon />
                 </a-button>
             </template>
         </a-page-header>
         <a-table :dataSource="getWorker" :columns="columns" size="small" bordered :pagination="pgn"
-            @change="handleTableChange">
+            :scroll="{ x: 3000, y: 1000 }" @change="handleTableChange">
             <template #customFilterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }">
                 <div style="padding: 8px">
                     <a-input ref="searchInput" :placeholder="`${column.title}`" :value="selectedKeys[0]"
@@ -212,6 +244,31 @@ onMounted(async () => {
                     <a-avatar @click="showModal(record)" v-if="record.picture" :size="32" :src="record.picture">
                     </a-avatar>
                 </template>
+
+
+                <template v-else-if="column.key === 'prefecture'">
+                    {{ record.prefecture_id ? getPrefecture.find(i => i.id == record.prefecture_id).name : '' }}
+                </template>
+                <template v-else-if="column.key === 'work_place'">
+                    {{ record.work_place_id ? getWorkplace.find(i => i.id == record.work_place_id).name : '' }}
+                </template>
+                <template v-else-if="column.key === 'res_card_number'">
+                    {{ record.resisdence_card_number }}
+                </template>
+                <template v-else-if="column.key === 'register_day'">
+                    {{ record.register_day }}
+                </template>
+                <template v-else-if="column.key === 'start_date'">
+                    {{ record.start_date }}
+                </template>
+                <template v-else-if="column.key === 'emergency_contact_name'">
+                    {{ record.emergency_contact_name }}
+                </template>
+
+
+
+
+
                 <template v-else-if="column.key === 'name'">
                     {{ record.name }}
                 </template>

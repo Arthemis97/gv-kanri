@@ -19,6 +19,8 @@ useEvent.on('logout', () => {
 onMounted(async () => {
     // console.log(route.meta.layout)
     await nationStore.fetchList();
+    await nationStore.fetchPrefecture();
+    await nationStore.fetchWorkplace();
 })
 </script>
 

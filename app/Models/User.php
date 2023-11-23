@@ -41,7 +41,17 @@ class User extends Authenticatable
         'advancement',
         'japanese_level',
         'urgent_contact',
-        'custom_id'
+        'custom_id',
+        'nick_name',
+        'resisdence_card_number',
+        'my_number',
+        'dependent',
+        'start_date',
+        'manager',
+        'registred_day',
+        'emergency_contact_name',
+        'prefecture_id',
+        'work_place_id'
     ];
 
     /**
@@ -149,6 +159,14 @@ class User extends Authenticatable
         'gender' => [
             "0" => "女",
             "1" => "男"
+        ],
+        'manager' => [
+            "1" => 'モンスタースレン',
+            "2" => '前村潤奎',
+            "3" => '海老原美寿々',
+            "4" => '野中梢絵',
+            "5" => '鈴木孝之',
+            "6" => '土屋佑太'
         ]
     ];
 
@@ -266,8 +284,19 @@ class User extends Authenticatable
         }
     }
 
+    public function getManagerValueAttribute()
+    {
+        if ($this->attributes['manager']) {
+            return $this->enumMappings['manager'][$this->attributes['manager']];
+        }
+    }
+
     public function national()
     {
         return $this->hasOne(National::class, 'id', 'nationality');
+    }
+    public function relation()
+    {
+        return $this->hasMany(Relation::class, 'user_id');
     }
 }

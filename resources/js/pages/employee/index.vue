@@ -17,12 +17,14 @@ const columns = [
     {
         title: '#',
         key: 'id',
-        width: 50
+        width: 50,
+        fixed: 'left',
     },
     {
         title: '写真',
         key: 'picture',
-        width: 40
+        width: 40,
+        fixed: 'left',
     },
     {
         title: '氏名',
@@ -35,6 +37,7 @@ const columns = [
                 }, 100);
             }
         },
+        fixed: 'left',
     },
     {
         title: 'フリガナ',
@@ -47,6 +50,12 @@ const columns = [
                 }, 100);
             }
         },
+        fixed: 'left',
+    },
+    {
+        title: '呼ぶ名',
+        key: 'nick_name',
+        fixed: 'left',
     },
     {
         title: '誕生日',
@@ -59,6 +68,18 @@ const columns = [
     {
         title: '住所',
         key: 'address',
+    },
+    {
+        title: '在留カード番号',
+        key: 'resisdence_card_number',
+    },
+    {
+        title: 'マイナンバー',
+        key: 'my_number',
+    },
+    {
+        title: '扶養',
+        key: 'dependent',
     },
     {
         title: '電話番号',
@@ -81,6 +102,10 @@ const columns = [
         key: 'working_place',
     },
     {
+        title: '入社日',
+        key: 'start_date',
+    },
+    {
         title: '働く期間（プラン）',
         key: 'working_plan',
     },
@@ -89,8 +114,13 @@ const columns = [
         key: 'introduce',
     },
     {
+        title: '担当者',
+        key: 'manager',
+    },
+    {
         title: '',
         key: 'action',
+        fixed: 'right',
         width: 75
     },
 ];
@@ -150,13 +180,13 @@ onMounted(async () => {
             <template #extra>
                 <a-input-search size="small" v-model:value="search_value" placeholder="Search..." style="width: 200px"
                     @search="onSearch" />
-                <a-button size="small" key="3">
-                    <PlusOutlined #icon @click="() => $router.push('/employee/add')" />
+                <a-button size="small" key="3" @click="() => $router.push('/employee/add')">
+                    <PlusOutlined #icon />
                 </a-button>
             </template>
         </a-page-header>
         <a-table :dataSource="getList" :columns="columns" size="small" bordered :pagination="pgn"
-            @change="handleTableChange">
+            @change="handleTableChange" :scroll="{ x: 2000, y: 1000 }">
             <template #customFilterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }">
                 <div style="padding: 8px">
                     <a-input ref="searchInput" :placeholder="`${column.title}`" :value="selectedKeys[0]"
@@ -186,6 +216,32 @@ onMounted(async () => {
                     <a-avatar @click="showModal(record)" v-if="record.picture" :size="32" :src="record.picture">
                     </a-avatar>
                 </template>
+
+
+                <template v-else-if="column.key === 'nick_name'">
+                    {{ record.nick_name }}
+                </template>
+
+                <template v-else-if="column.key === 'resisdence_card_number'">
+                    {{ record.resisdence_card_number }}
+                </template>
+
+                <template v-else-if="column.key === 'dependent'">
+                    {{ record.dependent ? 'います' : 'いません' }}
+                </template>
+
+                <template v-else-if="column.key === 'start_date'">
+                    {{ record.start_date }}
+                </template>
+
+                <template v-else-if="column.key === 'manager'">
+                    {{ record.manager_value }}
+                </template>
+
+
+
+
+
                 <template v-else-if="column.key === 'name'">
                     {{ record.name }}
                 </template>
