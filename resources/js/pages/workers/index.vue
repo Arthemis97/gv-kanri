@@ -15,6 +15,7 @@ const state = reactive({
 });
 
 const searchInput = ref();
+const loading = ref(false)
 
 const columns = [
     {
@@ -53,6 +54,11 @@ const columns = [
                 }, 100);
             }
         },
+        fixed: 'left',
+    },
+    {
+        title: '終了日',
+        key: 'pos_date',
         fixed: 'left',
     },
     {
@@ -96,16 +102,13 @@ const columns = [
         key: 'pos',
     },
     {
-        title: '終了日',
-        key: 'pos_date',
-    },
-    {
         title: '運転免許',
         key: 'driver_license',
+        width: 200
     },
     {
         title: '登録日',
-        key: 'register_day',
+        key: 'registred_day',
     },
     {
         title: '業務開始日',
@@ -135,7 +138,6 @@ const columns = [
         title: '',
         key: 'action',
         width: 75,
-        fixed: 'right',
     },
 ];
 
@@ -162,8 +164,10 @@ const handleReset = (clearFilters, key) => {
 };
 
 const fetchWorkerList = async (filters, pagination) => {
+    loading.value = true
     const pag = await employeeStore.fetchWorkerList(filters, pagination);
     pgn.value = { ...pag, ...{ pageSize: 20 } }
+    loading.value = false
 }
 
 const handleTableChange = (pagination, filters, sorter, { currentDataSource }) => {
@@ -213,7 +217,7 @@ onMounted(async () => {
                 </a-button>
             </template>
         </a-page-header>
-        <a-table :dataSource="getWorker" :columns="columns" size="small" bordered :pagination="pgn"
+        <a-table :loading="loading" :dataSource="getWorker" :columns="columns" size="small" bordered :pagination="pgn"
             :scroll="{ x: 3000, y: 1000 }" @change="handleTableChange">
             <template #customFilterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }">
                 <div style="padding: 8px">
@@ -255,8 +259,8 @@ onMounted(async () => {
                 <template v-else-if="column.key === 'res_card_number'">
                     {{ record.resisdence_card_number }}
                 </template>
-                <template v-else-if="column.key === 'register_day'">
-                    {{ record.register_day }}
+                <template v-else-if="column.key === 'registred_day'">
+                    {{ record.registred_day }}
                 </template>
                 <template v-else-if="column.key === 'start_date'">
                     {{ record.start_date }}

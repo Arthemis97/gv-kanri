@@ -13,6 +13,8 @@ const state = reactive({
 const searchInput = ref();
 const search_value = ref("")
 
+const loading = ref(false)
+
 const columns = [
     {
         title: '#',
@@ -72,6 +74,7 @@ const columns = [
     {
         title: '在留カード番号',
         key: 'resisdence_card_number',
+        width: 100
     },
     {
         title: 'マイナンバー',
@@ -96,6 +99,7 @@ const columns = [
     {
         title: '運転免許',
         key: 'driver_license',
+        width: 250
     },
     {
         title: '職場名',
@@ -108,6 +112,7 @@ const columns = [
     {
         title: '働く期間（プラン）',
         key: 'working_plan',
+        width: 120
     },
     {
         title: '自己PR',
@@ -120,7 +125,6 @@ const columns = [
     {
         title: '',
         key: 'action',
-        fixed: 'right',
         width: 75
     },
 ];
@@ -144,8 +148,10 @@ const handleReset = (clearFilters, key) => {
 };
 
 const fetchList = async (filters, pagination) => {
+    loading.value = true
     const pag = await employeeStore.fetchList(filters, pagination);
     pgn.value = { ...pag, ...{ pageSize: 20 } }
+    loading.value = false
 }
 
 const handleTableChange = (pagination, filters, sorter, { currentDataSource }) => {
@@ -170,6 +176,10 @@ const showModal = (data) => {
     useEvent.emit('modal:profile:open', data)
 }
 
+const showDep = (data) => {
+    useEvent.emit('modal:dep:open', data.relation)
+}
+
 onMounted(async () => {
     fetchList(null, null)
 })
@@ -185,8 +195,9 @@ onMounted(async () => {
                 </a-button>
             </template>
         </a-page-header>
-        <a-table :dataSource="getList" :columns="columns" size="small" bordered :pagination="pgn"
+        <a-table :loading="loading" :dataSource="getList" :columns="columns" size="small" bordered :pagination="pgn"
             @change="handleTableChange" :scroll="{ x: 2000, y: 1000 }">
+
             <template #customFilterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }">
                 <div style="padding: 8px">
                     <a-input ref="searchInput" :placeholder="`${column.title}`" :value="selectedKeys[0]"
@@ -227,7 +238,8 @@ onMounted(async () => {
                 </template>
 
                 <template v-else-if="column.key === 'dependent'">
-                    {{ record.dependent ? 'います' : 'いません' }}
+                    <a-button @click="showDep(record)" type="primary" size="small" v-if="record.dependent">います</a-button>
+                    <a-button type="text" size="small" v-else>いません</a-button>
                 </template>
 
                 <template v-else-if="column.key === 'start_date'">
@@ -236,6 +248,9 @@ onMounted(async () => {
 
                 <template v-else-if="column.key === 'manager'">
                     {{ record.manager_value }}
+                </template>
+                <template v-else-if="column.key === 'my_number'">
+                    {{ record.my_number }}
                 </template>
 
 

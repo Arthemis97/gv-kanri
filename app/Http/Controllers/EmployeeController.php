@@ -264,15 +264,16 @@ class EmployeeController extends Controller
         $jpn = [];
         $prefecture = [];
 
-        $employees = User::worker()->with(['national', 'prefecture'])->paginate(10000000);
+        $workers = User::worker()->with(['national', 'prefecture'])->paginate(10000000);
+        $employee = User::employee()->paginate(10000000);
 
-        $employees->getCollection()->transform(function ($employee) {
-            $employee->visa_type_value = $employee->visa_type_value;
-            $employee->japanese_level_value = $employee->japanese_level_value;
-            return $employee;
+        $workers->getCollection()->transform(function ($worker) {
+            $worker->visa_type_value = $worker->visa_type_value;
+            $worker->japanese_level_value = $worker->japanese_level_value;
+            return $worker;
         });
 
-        foreach ($employees as $key => $value) {
+        foreach ($workers as $key => $value) {
             if ($value->gender) {
                 if (!isset($gender['Male'])) {
                     $gender['Male'] = 1;
@@ -328,6 +329,8 @@ class EmployeeController extends Controller
             "visa" => $visa,
             "jpn" => $jpn,
             "prefecture" => $prefecture,
+            "workers" => sizeof($workers),
+            "employee" => sizeof($employee)
         ]);
     }
 

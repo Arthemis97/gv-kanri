@@ -2,6 +2,7 @@
 import useAuthStore from "../stores/auth"
 import { Modal } from 'ant-design-vue';
 import profile from "../components/profile.vue";
+import dep from "../components/dep.vue";
 const authStore = useAuthStore()
 const router = useRouter()
 
@@ -44,6 +45,7 @@ const logout = () => {
                 <div :style="{ padding: '24px', background: '#fff', minHeight: '360px' }">
                     <slot />
                     <profile />
+                    <dep />
                 </div>
             </a-layout-content>
         </a-layout>

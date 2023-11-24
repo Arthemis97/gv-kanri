@@ -8,6 +8,7 @@ const { getErrors } = storeToRefs(employeeStore)
 const router = useRouter();
 const route = useRoute();
 const form = ref({})
+const loading = ref(false)
 
 const drlc = [
     { value: "1", text: "普通免許(AT、MT、第一種、第二種)" },
@@ -57,14 +58,13 @@ const pos = [
 ]
 
 const save = async () => {
+    loading.value = true
     if (form.value.id) {
         await employeeStore.update(form.value.id, form.value)
         message.success('Updated')
         router.push('/employee')
     } else {
         await employeeStore.store(form.value)
-        // if (getErrors.value) {
-        // }
         message.success('Success')
         router.push('/employee')
     }
@@ -250,7 +250,7 @@ onMounted(async () => {
                     </a-form-item>
                 </a-col>
             </a-row>
-            <a-button type="primary" @click="save">Save</a-button>
+            <a-button :disabled="loading" type="primary" @click="save">Save</a-button>
         </a-form>
         <div class="tw-flex-1" v-if="form.dependent">
             <div class="tw-flex tw-space-x-4 tw-mb-2">
