@@ -42,26 +42,26 @@ class EmployeeController extends Controller
                             $query->filterByWorkingPlace($search);
                         })
                         ->orWhere(function ($query) use ($search) {
-                            $query->FilterByDriverLicense($search);
+                            $query->filterByDriverLicense($search);
                         })
                         ->orWhere(function ($query) use ($search) {
-                            $query->FilterByWorkingPlan($search);
+                            $query->filterByWorkingPlan($search);
                         })
                         ->orWhere(function ($query) use ($search) {
-                            $query->FilterByVisaType($search);
+                            $query->filterByVisaType($search);
                         })
                         ->orWhere(function ($query) use ($search) {
-                            $query->FilterByAdvancement($search);
+                            $query->filterByAdvancement($search);
                         })
                         ->orWhere(function ($query) use ($search) {
-                            $query->FilterByJapaneseLevel($search);
+                            $query->filterByJapaneseLevel($search);
                         })
                         ->orWhere(function ($query) use ($search) {
-                            $query->FilterByPos($search);
-                        })
-                        ->orWhere(function ($query) use ($search) {
-                            $query->FilterByGender($search);
+                            $query->filterByPos($search);
                         });
+                    // ->orWhere(function ($query) use ($search) {
+                    //     $query->filterByGender($search);
+                    // });
                 });
         }
 
@@ -114,26 +114,26 @@ class EmployeeController extends Controller
                             $query->filterByWorkingPlace($search);
                         })
                         ->orWhere(function ($query) use ($search) {
-                            $query->FilterByDriverLicense($search);
+                            $query->filterByDriverLicense($search);
                         })
                         ->orWhere(function ($query) use ($search) {
-                            $query->FilterByWorkingPlan($search);
+                            $query->filterByWorkingPlan($search);
                         })
                         ->orWhere(function ($query) use ($search) {
-                            $query->FilterByVisaType($search);
+                            $query->filterByVisaType($search);
                         })
                         ->orWhere(function ($query) use ($search) {
-                            $query->FilterByAdvancement($search);
+                            $query->filterByAdvancement($search);
                         })
                         ->orWhere(function ($query) use ($search) {
-                            $query->FilterByJapaneseLevel($search);
+                            $query->filterByJapaneseLevel($search);
                         })
                         ->orWhere(function ($query) use ($search) {
-                            $query->FilterByPos($search);
-                        })
-                        ->orWhere(function ($query) use ($search) {
-                            $query->FilterByGender($search);
+                            $query->filterByPos($search);
                         });
+                    // ->orWhere(function ($query) use ($search) {
+                    //     $query->filterByGender($search);
+                    // });
                 });
         }
 

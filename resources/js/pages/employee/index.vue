@@ -201,7 +201,7 @@ onMounted(async () => {
             </template>
         </a-page-header>
         <a-table :loading="loading" :dataSource="getList" :columns="columns" size="small" bordered :pagination="pgn"
-            @change="handleTableChange" :scroll="{ x: 2000, y: 1000 }">
+            @change="handleTableChange" :scroll="{ x: 3000, y: 1000 }">
 
             <template #customFilterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }">
                 <div style="padding: 8px">
