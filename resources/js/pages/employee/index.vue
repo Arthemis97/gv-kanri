@@ -40,6 +40,7 @@ const columns = [
             }
         },
         fixed: 'left',
+        width: 200
     },
     {
         title: 'フリガナ',
@@ -53,6 +54,7 @@ const columns = [
             }
         },
         fixed: 'left',
+        width: 200
     },
     {
         title: '呼ぶ名',
@@ -74,11 +76,12 @@ const columns = [
     {
         title: '在留カード番号',
         key: 'resisdence_card_number',
-        width: 100
+        width: 120
     },
     {
         title: 'マイナンバー',
         key: 'my_number',
+        width: 120
     },
     {
         title: '扶養',
@@ -87,6 +90,7 @@ const columns = [
     {
         title: '電話番号',
         key: 'phone_number',
+        width: 120
     },
     {
         title: '在留期間',
@@ -121,6 +125,7 @@ const columns = [
     {
         title: '担当者',
         key: 'manager',
+        width: 120
     },
     {
         title: '',

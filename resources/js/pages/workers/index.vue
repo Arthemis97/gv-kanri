@@ -117,6 +117,7 @@ const columns = [
     {
         title: '現場名',
         key: 'work_place',
+        width: 300
     },
     {
         title: '就職 / 進学',
