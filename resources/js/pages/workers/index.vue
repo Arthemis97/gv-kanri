@@ -294,7 +294,7 @@ onMounted(async () => {
 
                 <template v-else-if="column.key === 'name'">
                     <div @click="showBlackModal(record)" class="tw-cursor-pointer">
-                        <span v-if="!record.black_list" :class="record.black_list == 0 ? 'tw-text-black' : ''">
+                        <span v-if="!record.black_list || record.black_list == 0" :class="record.black_list == 0 ? 'tw-text-black' : ''">
                             {{ record.name }}
                         </span>
                         <span v-if="record.black_list == 1" :class="record.black_list == 1 ? 'tw-text-orange-500' : ''">
