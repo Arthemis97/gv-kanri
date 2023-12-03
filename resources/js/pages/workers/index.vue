@@ -216,9 +216,10 @@ const onSearch = async () => {
     fetchWorkerList({ search: search_value.value }, null)
 }
 
+
 watch(search_value, (newVal) => {
-    if (!newVal || newVal.length == 0) {
-        fetchList(null, null)
+    if(!newVal || newVal.length == 0){
+        fetchWorkerList(null, null)
     }
 })
 
