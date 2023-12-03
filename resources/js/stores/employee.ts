@@ -2,13 +2,11 @@ const useEmployeeStore = defineStore('employee', {
     state: () => ({
         list: [],
         worker: [],
-        pagination: {},
-        errors: null
+        pagination: {}
     }),
     getters: {
         getList: (state) => state.list,
         getPagination: (state) => state.pagination,
-        getErrors: (state) => state.errors,
         getWorker: (state) => state.worker
     },
     actions: {
@@ -64,21 +62,15 @@ const useEmployeeStore = defineStore('employee', {
         },
         async store(data) {
             const resp = await useRequest.post('/employee', data);
-            if (resp.resp.status == 422) {
-                this.errors = resp.data
-            }
+            return resp;
         },
         async storeWorker(data) {
             const resp = await useRequest.post('/worker', data);
-            if (resp.resp.status == 422) {
-                this.errors = resp.data
-            }
+            return resp;
         },
         async update(id, data) {
             const resp = await useRequest.put(`/employee/${id}`, data);
-            if (resp.resp.status == 422) {
-                this.errors = resp.data
-            }
+            return resp;
         },
     },
 });

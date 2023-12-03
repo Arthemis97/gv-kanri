@@ -155,18 +155,23 @@ class EmployeeController extends Controller
 
     public function store(Request $request)
     {
-
         $rules = [
             'name' => 'required',
             'furigana' => 'required',
+            'nick_name' => 'required',
             'dob' => 'required',
             'gender' => 'required',
             'address' => 'required',
+            'phone_number' => 'required',
+            'resisdence_card_number' => 'required|unique:users',
+            'my_number' => 'required',
+            'dependent' => 'required',
             'pos' => 'required',
             'pos_date' => 'required',
             'driver_license' => 'required',
             'working_place' => 'required',
             'working_plan' => 'required',
+            'manager'  => 'required',
             'introduce' => 'required'
         ];
 
@@ -201,11 +206,26 @@ class EmployeeController extends Controller
         $rules = [
             'name' => 'required',
             'furigana' => 'required',
+            'custom_id' => 'required',
+            'phone_number' => 'required',
+            'black_list' => 'required',
+            'prefecture_id' => 'required',
             'dob' => 'required',
             'gender' => 'required',
+            'nationality' => 'required',
+            'visa_type' => 'required',
+            'resisdence_card_number' => 'required',
+            'work_restrictions' => 'required',
+            'advancement' => 'required',
+            'japanese_level' => 'required',
+            'urgent_contact' => 'required',
             'address' => 'required',
             'pos' => 'required',
             'pos_date' => 'required',
+            'registred_day' => 'required',
+            'work_place_id' => 'required',
+            'emergency_contact_name' => 'required',
+            'start_date' => 'required',
             'driver_license' => 'required'
         ];
 

@@ -15,13 +15,19 @@ const useRequest = {
             method: "GET",
             headers: headers,
         });
-        if (resp.status === 200) {
+        try {
             const respdata = await resp.json();
-            return { resp: resp, data: respdata };
-        } else if (resp.status === 401) {
-            useEvent.emit("logout");
-        } else {
-            return { resp: resp, data: null };
+            return {data: respdata};
+        } catch (error) {
+            try {
+                const responseBody = await resp.text();
+                if (error instanceof Response && error.status == 401) {
+                    useEvent.emit("logout");
+                }
+                return responseBody;
+            } catch (e) {
+                console.error('Failed to get response body:', e);
+            }
         }
     },
     async post(url, data, type = "application/json") {
@@ -43,14 +49,23 @@ const useRequest = {
             headers: headers,
             body: payload,
         });
-        if (resp.status !== 500) {
+
+
+        try {
             const respdata = await resp.json();
-            return { resp: resp, data: respdata };
-        } else if (resp.status === 401) {
-            useEvent.emit("logout");
-        } else {
-            return { resp: resp, data: null };
+            return {data: respdata};
+        } catch (error) {
+            try {
+                const responseBody = await resp.text();
+                if (error instanceof Response && error.status == 401) {
+                    useEvent.emit("logout");
+                }
+                return responseBody;
+            } catch (e) {
+                console.error('Failed to get response body:', e);
+            }
         }
+
     },
     async put(url, data, type = "application/json") {
         const authStore = useAuthStore();
@@ -71,13 +86,20 @@ const useRequest = {
             headers: headers,
             body: payload,
         });
-        if (resp.status === 200) {
+
+        try {
             const respdata = await resp.json();
-            return { resp: resp, data: respdata };
-        } else if (resp.status === 401) {
-            useEvent.emit("logout");
-        } else {
-            return { resp: resp, data: null };
+            return {data: respdata};
+        } catch (error) {
+            try {
+                const responseBody = await resp.text();
+                if (error instanceof Response && error.status == 401) {
+                    useEvent.emit("logout");
+                }
+                return responseBody;
+            } catch (e) {
+                console.error('Failed to get response body:', e);
+            }
         }
     },
     async del(url) {
@@ -92,13 +114,21 @@ const useRequest = {
             method: "DELETE",
             headers: headers,
         });
-        if (resp.status === 200) {
+
+
+        try {
             const respdata = await resp.json();
-            return { resp: resp, data: respdata };
-        } else if (resp.status === 401) {
-            useEvent.emit("logout");
-        } else {
-            return { resp: resp, data: null };
+            return {data: respdata};
+        } catch (error) {
+            try {
+                const responseBody = await resp.text();
+                if (error instanceof Response && error.status == 401) {
+                    useEvent.emit("logout");
+                }
+                return responseBody;
+            } catch (e) {
+                console.error('Failed to get response body:', e);
+            }
         }
     },
 };

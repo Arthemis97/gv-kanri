@@ -4,9 +4,12 @@ import { Modal } from 'ant-design-vue';
 import { PlusOutlined, DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons-vue'
 import useEmployeeStore from "../../stores/employee";
 import useNationStore from "../../stores/nation";
+import useAuthStore from "../../stores/auth";
 const router = useRouter();
+const authStore = useAuthStore();
 const employeeStore = useEmployeeStore();
 const nationStore = useNationStore();
+const { getUser } = storeToRefs(authStore)
 const { getWorker } = storeToRefs(employeeStore)
 const { getPrefecture, getWorkplace } = storeToRefs(nationStore)
 const state = reactive({
@@ -120,7 +123,7 @@ const columns = [
         width: 300
     },
     {
-        title: '就職 / 進学',
+        title: '在籍情報',
         key: 'advancement',
     },
     {
@@ -151,6 +154,15 @@ const edit = (id) => {
 
 const showModal = (data) => {
     useEvent.emit('modal:profile:open', data)
+}
+
+const showBlackModal = (data) => {
+    if(data.black_list) {
+        useEvent.emit('modal:black:open', data)
+    }
+}
+const canDo = (role) => {
+    return role.includes(getUser.value.admin_type)
 }
 
 const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -203,6 +215,12 @@ const onSearch = async () => {
     fetchWorkerList({ search: search_value.value }, null)
 }
 
+watch(search_value, (newVal) => {
+    if (!newVal || newVal.length == 0) {
+        fetchList(null, null)
+    }
+})
+
 onMounted(async () => {
     fetchWorkerList(null, null)
 })
@@ -213,7 +231,7 @@ onMounted(async () => {
             <template #extra>
                 <a-input-search size="small" v-model:value="search_value" placeholder="Search..." style="width: 200px"
                     @search="onSearch" />
-                <a-button size="small" key="3" @click="() => $router.push('/workers/add')">
+                <a-button v-if="canDo(['admin', 'regular'])" size="small" key="3" @click="() => $router.push('/workers/add')">
                     <PlusOutlined #icon />
                 </a-button>
             </template>
@@ -275,7 +293,17 @@ onMounted(async () => {
 
 
                 <template v-else-if="column.key === 'name'">
-                    {{ record.name }}
+                    <div @click="showBlackModal(record)" class="tw-cursor-pointer">
+                        <span v-if="!record.black_list" :class="record.black_list == 0 ? 'tw-text-black' : ''">
+                            {{ record.name }}
+                        </span>
+                        <span v-if="record.black_list == 1" :class="record.black_list == 1 ? 'tw-text-orange-500' : ''">
+                            {{ record.name }}
+                        </span>
+                        <span v-if="record.black_list == 2" :class="record.black_list == 2 ? 'tw-text-red-500' : ''">
+                            {{ record.name }}
+                        </span>
+                    </div>
                 </template>
                 <template v-else-if="column.key === 'furigana'">
                     {{ record.furigana }}
@@ -321,10 +349,10 @@ onMounted(async () => {
                     {{ record.urgent_contact }}
                 </template>
                 <template v-else-if="column.key === 'action'">
-                    <a-button @click="edit(record.id)" size="small" class="tw-mr-1">
+                    <a-button v-if="canDo(['admin', 'regular'])" @click="edit(record.id)" size="small" class="tw-mr-1">
                         <EditOutlined #icon />
                     </a-button>
-                    <a-button size="small" danger @click="deleteuser(record.id)">
+                    <a-button v-if="canDo(['admin'])" size="small" danger @click="deleteuser(record.id)">
                         <DeleteOutlined #icon />
                     </a-button>
                 </template>

@@ -2028,6 +2028,7 @@ declare global {
   const IZhihuB: typeof import('@vexip-ui/icons')['ZhihuB']
   const acceptHMRUpdate: typeof import('pinia')['acceptHMRUpdate']
   const auth: typeof import('./resources/js/stores/auth')['default']
+  const can: typeof import('./resources/js/composables/useCommon.js')['can']
   const computed: typeof import('vue')['computed']
   const createApp: typeof import('vue')['createApp']
   const createPinia: typeof import('pinia')['createPinia']

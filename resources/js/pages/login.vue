@@ -15,7 +15,7 @@ const login = async () => {
         name: name.value,
         password: password.value
       })
-	  if(response.resp.status === 200) {
+	  if(!response.data.error) {
 		authStore.login({
 			user: response.data.user,
 			token: response.data.token

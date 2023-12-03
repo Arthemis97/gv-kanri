@@ -2,9 +2,12 @@
 import { PlusOutlined, DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons-vue'
 import { Modal } from 'ant-design-vue';
 import useEmployeeStore from "../../stores/employee";
+import useAuthStore from "../../stores/auth";
 const router = useRouter();
 const employeeStore = useEmployeeStore();
+const authStore = useAuthStore();
 const { getList } = storeToRefs(employeeStore)
+const { getUser } = storeToRefs(authStore)
 const state = reactive({
     searchText: '',
     searchedColumn: '',
@@ -185,6 +188,16 @@ const showDep = (data) => {
     useEvent.emit('modal:dep:open', data.relation)
 }
 
+const canDo = (role) => {
+    return role.includes(getUser.value.admin_type)
+}
+
+watch(search_value, (newVal) => {
+    if(!newVal || newVal.length == 0){
+        fetchList(null, null)
+    }
+})
+
 onMounted(async () => {
     fetchList(null, null)
 })
@@ -195,7 +208,7 @@ onMounted(async () => {
             <template #extra>
                 <a-input-search size="small" v-model:value="search_value" placeholder="Search..." style="width: 200px"
                     @search="onSearch" />
-                <a-button size="small" key="3" @click="() => $router.push('/employee/add')">
+                <a-button v-if="canDo(['admin', 'regular'])" size="small" key="3" @click="() => $router.push('/employee/add')">
                     <PlusOutlined #icon />
                 </a-button>
             </template>
@@ -207,7 +220,7 @@ onMounted(async () => {
                 <div style="padding: 8px">
                     <a-input ref="searchInput" :placeholder="`${column.title}`" :value="selectedKeys[0]"
                         style="width: 188px; margin-bottom: 8px; display: block"
-                        @change="e => setSelectedKeys(e.target.value ? e.target.value : '')"
+                        @change="(e: any) => setSelectedKeys(e.target.value ? e.target.value : '')"
                         @pressEnter="handleSearch(selectedKeys, confirm, column.key)" />
                     <a-button type="primary" size="small" style="width: 90px; margin-right: 8px"
                         @click="handleSearch(selectedKeys, confirm, column.key)">
@@ -300,10 +313,10 @@ onMounted(async () => {
                     {{ record.introduce }}
                 </template>
                 <template v-else-if="column.key === 'action'">
-                    <a-button @click="edit(record.id)" size="small" class="tw-mr-1">
+                    <a-button v-if="canDo(['admin', 'regular'])" @click="edit(record.id)" size="small" class="tw-mr-1">
                         <EditOutlined #icon />
                     </a-button>
-                    <a-button size="small" danger @click="deleteuser(record.id)">
+                    <a-button v-if="canDo(['admin'])" size="small" danger @click="deleteuser(record.id)">
                         <DeleteOutlined #icon />
                     </a-button>
                 </template>

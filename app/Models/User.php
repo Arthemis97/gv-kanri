@@ -18,7 +18,6 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
         'email',
         'password',
         'phone_number',
@@ -51,7 +50,11 @@ class User extends Authenticatable
         'registred_day',
         'emergency_contact_name',
         'prefecture_id',
-        'work_place_id'
+        'work_place_id',
+        'black_list',
+        'black_list_description',
+        'real_name',
+        'admin_type'
     ];
 
     /**
@@ -140,7 +143,9 @@ class User extends Authenticatable
         'advancement' => [
             '1' => '就職',
             '2' => '進学',
-            '3' => '帰国'
+            '3' => '帰国',
+            '4' => '休職',
+            '5'=> '在籍中'
         ],
         'japanese_level' => [
             '1' => 'N1',

@@ -4,11 +4,11 @@ import { onMounted } from "vue";
 import useEmployeeStore from "../../stores/employee";
 import { message } from "ant-design-vue";
 const employeeStore = useEmployeeStore();
-const { getErrors } = storeToRefs(employeeStore)
 const router = useRouter();
 const route = useRoute();
 const form = ref({})
 const loading = ref(false)
+const errors = ref({})
 
 const drlc = [
     { value: "1", text: "普通免許(AT、MT、第一種、第二種)" },
@@ -60,13 +60,23 @@ const pos = [
 const save = async () => {
     loading.value = true
     if (form.value.id) {
-        await employeeStore.update(form.value.id, form.value)
-        message.success('Updated')
-        router.push('/employee')
+        const resp = await employeeStore.update(form.value.id, form.value)
+        if (resp.data.errors) {
+            errors.value = resp.data.errors
+            loading.value = false
+        } else {
+            message.success('Updated')
+            router.push('/employee')
+        }
     } else {
-        await employeeStore.store(form.value)
-        message.success('Success')
-        router.push('/employee')
+        const resp = await employeeStore.store(form.value)
+        if (resp.data.errors) {
+            errors.value = resp.data.errors
+            loading.value = false
+        } else {
+            message.success('Success')
+            router.push('/employee')
+        }
     }
 }
 
@@ -108,32 +118,30 @@ onMounted(async () => {
             <a-row :gutter="14">
                 <a-col :span="12">
                     <a-form-item label="氏名">
-                        <a-input placeholder="氏名" v-model:value="form.name"
-                            :status="getErrors && getErrors.errors.name ? 'error' : ''" />
+                        <a-input placeholder="氏名" v-model:value="form.name" :status="errors.name ? 'error' : ''" />
                     </a-form-item>
                 </a-col>
                 <a-col :span="12">
                     <a-form-item label="フリガナ">
                         <a-input placeholder="フリガナ" v-model:value="form.furigana"
-                            :status="getErrors && getErrors.errors.furigana ? 'error' : ''" />
+                            :status="errors.furigana ? 'error' : ''" />
                     </a-form-item>
                 </a-col>
                 <a-col :span="12">
                     <a-form-item label="呼ぶ名">
                         <a-input placeholder="呼ぶ名" v-model:value="form.nick_name"
-                            :status="getErrors && getErrors.errors.nick_name ? 'error' : ''" />
+                            :status="errors.nick_name ? 'error' : ''" />
                     </a-form-item>
                 </a-col>
                 <a-col :span="12">
                     <a-form-item label="誕生日">
                         <a-date-picker valueFormat="YYYY-MM-DD" placeholder="誕生日" class="tw-w-full" v-model:value="form.dob"
-                            :status="getErrors && getErrors.errors.dob ? 'error' : ''" />
+                            :status="errors.dob ? 'error' : ''" />
                     </a-form-item>
                 </a-col>
                 <a-col :span="12">
                     <a-form-item label="性別">
-                        <a-select placeholder="性別" v-model:value="form.gender"
-                            :status="getErrors && getErrors.errors.gender ? 'error' : ''">
+                        <a-select placeholder="性別" v-model:value="form.gender" :status="errors.gender ? 'error' : ''">
                             <a-select-option key="1" :value="1">男</a-select-option>
                             <a-select-option key="2" :value="0">女</a-select-option>
                         </a-select>
@@ -142,31 +150,29 @@ onMounted(async () => {
                 <a-col :span="12">
                     <a-form-item label="電話番号">
                         <a-input placeholder="電話番号" v-model:value="form.phone_number"
-                            :status="getErrors && getErrors.errors.phone_number ? 'error' : ''" />
+                            :status="errors.phone_number ? 'error' : ''" />
                     </a-form-item>
                 </a-col>
                 <a-col :span="24">
                     <a-form-item label="住所">
-                        <a-input placeholder="住所" v-model:value="form.address"
-                            :status="getErrors && getErrors.errors.address ? 'error' : ''" />
+                        <a-input placeholder="住所" v-model:value="form.address" :status="errors.address ? 'error' : ''" />
                     </a-form-item>
                 </a-col>
                 <a-col :span="12">
                     <a-form-item label="在留カード番号">
                         <a-input placeholder="在留カード番号" v-model:value="form.resisdence_card_number"
-                            :status="getErrors && getErrors.errors.resisdence_card_number ? 'error' : ''" />
+                            :status="errors.resisdence_card_number ? 'error' : ''" />
                     </a-form-item>
                 </a-col>
                 <a-col :span="12">
                     <a-form-item label="マイナンバー">
                         <a-input placeholder="マイナンバー" v-model:value="form.my_number"
-                            :status="getErrors && getErrors.errors.my_number ? 'error' : ''" />
+                            :status="errors.my_number ? 'error' : ''" />
                     </a-form-item>
                 </a-col>
                 <a-col :span="12">
                     <a-form-item label="扶養">
-                        <a-select placeholder="扶養" v-model:value="form.dependent"
-                            :status="getErrors && getErrors.errors.dependent ? 'error' : ''">
+                        <a-select placeholder="扶養" v-model:value="form.dependent" :status="errors.dependent ? 'error' : ''">
                             <a-select-option key="1" :value="1">います</a-select-option>
                             <a-select-option key="2" :value="0">いません</a-select-option>
                         </a-select>
@@ -187,8 +193,7 @@ onMounted(async () => {
                 <a-col :span="12">
 
                     <a-form-item label="在留期間">
-                        <a-select placeholder="在留期間" v-model:value="form.pos"
-                            :status="getErrors && getErrors.errors.pos ? 'error' : ''">
+                        <a-select placeholder="在留期間" v-model:value="form.pos" :status="errors.pos ? 'error' : ''">
                             <a-select-option v-for="(i, i_index) in pos" :value="i.value" :key="i_index">{{ i.text
                             }}</a-select-option>
                         </a-select>
@@ -197,13 +202,13 @@ onMounted(async () => {
                 <a-col :span="12">
                     <a-form-item label="終了日">
                         <a-date-picker valueFormat="YYYY-MM-DD" placeholder="終了日" class="tw-w-full"
-                            v-model:value="form.pos_date" :status="getErrors && getErrors.errors.pos_date ? 'error' : ''" />
+                            v-model:value="form.pos_date" :status="errors.pos_date ? 'error' : ''" />
                     </a-form-item>
                 </a-col>
                 <a-col :span="24">
                     <a-form-item label="運転免許">
                         <a-select placeholder="運転免許" v-model:value="form.driver_license"
-                            :status="getErrors && getErrors.errors.driver_license ? 'error' : ''">
+                            :status="errors.driver_license ? 'error' : ''">
                             <a-select-option v-for="(i, i_index) in drlc" :value="i.value" :key="i_index">{{ i.text
                             }}</a-select-option>
                         </a-select>
@@ -212,7 +217,7 @@ onMounted(async () => {
                 <a-col :span="12">
                     <a-form-item label="職場名">
                         <a-select placeholder="職場名" v-model:value="form.working_place"
-                            :status="getErrors && getErrors.errors.working_place ? 'error' : ''">
+                            :status="errors.working_place ? 'error' : ''">
                             <a-select-option v-for="(i, i_index) in workplace" :value="i.value" :key="i_index">{{ i.text
                             }}</a-select-option>
                         </a-select>
@@ -221,14 +226,13 @@ onMounted(async () => {
                 <a-col :span="12">
                     <a-form-item label="入社日">
                         <a-date-picker valueFormat="YYYY-MM-DD" placeholder="入社日" class="tw-w-full"
-                            v-model:value="form.start_date"
-                            :status="getErrors && getErrors.errors.start_date ? 'error' : ''" />
+                            v-model:value="form.start_date" :status="errors.start_date ? 'error' : ''" />
                     </a-form-item>
                 </a-col>
                 <a-col :span="12">
                     <a-form-item label="働く期間（プラン）">
                         <a-select placeholder="働く期間（プラン）" v-model:value="form.working_plan"
-                            :status="getErrors && getErrors.errors.working_plan ? 'error' : ''">
+                            :status="errors.working_plan ? 'error' : ''">
                             <a-select-option v-for="(i, i_index) in workplan" :value="i.value" :key="i_index">{{ i.text
                             }}</a-select-option>
                         </a-select>
@@ -236,8 +240,7 @@ onMounted(async () => {
                 </a-col>
                 <a-col :span="12">
                     <a-form-item label="担当者">
-                        <a-select placeholder="担当者" v-model:value="form.manager"
-                            :status="getErrors && getErrors.errors.manager ? 'error' : ''">
+                        <a-select placeholder="担当者" v-model:value="form.manager" :status="errors.manager ? 'error' : ''">
                             <a-select-option v-for="(i, i_index) in managers" :value="i.value" :key="i_index">{{ i.text
                             }}</a-select-option>
                         </a-select>
@@ -246,51 +249,57 @@ onMounted(async () => {
                 <a-col :span="24">
                     <a-form-item label="自己PR">
                         <a-input placeholder="自己PR" v-model:value="form.introduce"
-                            :status="getErrors && getErrors.errors.introduce ? 'error' : ''" />
+                            :status="errors.introduce ? 'error' : ''" />
                     </a-form-item>
                 </a-col>
             </a-row>
             <a-button :disabled="loading" type="primary" @click="save">Save</a-button>
         </a-form>
-        <div class="tw-flex-1" v-if="form.dependent">
-            <div class="tw-flex tw-space-x-4 tw-mb-2">
-                <a-button size="small" @click="addDependent">
-                    <PlusOutlined #icon />
-                </a-button>
+        <div class="tw-flex-1">
+            <template v-if="form.dependent">
+                <div class="tw-flex tw-space-x-4 tw-mb-2">
+                    <a-button size="small" @click="addDependent">
+                        <PlusOutlined #icon />
+                    </a-button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <td>氏名</td>
+                            <td>フリガナ</td>
+                            <td>性別</td>
+                            <td>在留カード番号</td>
+                            <td>マイナンバー</td>
+                            <td>扶養</td>
+                            <td></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(i, index) in form.relation" :key="index">
+                            <td><a-input size="small" v-model:value="i.name" /></td>
+                            <td><a-input size="small" v-model:value="i.furigana" /></td>
+                            <td>
+                                <a-select size="small" placeholder="性別" v-model:value="i.gender">
+                                    <a-select-option key="1" :value="1">男</a-select-option>
+                                    <a-select-option key="2" :value="0">女</a-select-option>
+                                </a-select>
+                            </td>
+                            <td><a-input size="small" v-model:value="i.resisdence_card_number" /></td>
+                            <td><a-input size="small" v-model:value="i.my_number" /></td>
+                            <td><a-input size="small" v-model:value="i.dependent" /></td>
+                            <td>
+                                <a-button danger size="small" @click="removeDependent(index)">
+                                    <DeleteOutlined #icon />
+                                </a-button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </template>
+            <div class="tw-flex tw-flex-col tw-space-y-2 tw-mt-4">
+                <a-alert v-for="(i, index) in Object.keys(errors)" :key="index" :message="errors[i][0]" type="error"
+                    show-icon />
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <td>氏名</td>
-                        <td>フリガナ</td>
-                        <td>性別</td>
-                        <td>在留カード番号</td>
-                        <td>マイナンバー</td>
-                        <td>扶養</td>
-                        <td></td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(i, index) in form.relation" :key="index">
-                        <td><a-input size="small" v-model:value="i.name" /></td>
-                        <td><a-input size="small" v-model:value="i.furigana" /></td>
-                        <td>
-                            <a-select size="small" placeholder="性別" v-model:value="i.gender">
-                                <a-select-option key="1" :value="1">男</a-select-option>
-                                <a-select-option key="2" :value="0">女</a-select-option>
-                            </a-select>
-                        </td>
-                        <td><a-input size="small" v-model:value="i.resisdence_card_number" /></td>
-                        <td><a-input size="small" v-model:value="i.my_number" /></td>
-                        <td><a-input size="small" v-model:value="i.dependent" /></td>
-                        <td>
-                            <a-button danger size="small" @click="removeDependent(index)">
-                                <DeleteOutlined #icon />
-                            </a-button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
     </div>
 </template>
