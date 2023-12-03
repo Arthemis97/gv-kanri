@@ -237,9 +237,9 @@ onMounted(async () => {
             <template #customFilterIcon="{ filtered }">
                 <search-outlined :style="{ color: filtered ? '#108ee9' : undefined }" />
             </template>
-            <template #bodyCell="{ column, record }">
+            <template #bodyCell="{ column, record, index }">
                 <template v-if="column.key === 'id'">
-                    {{ record.id }}
+                    {{ parseInt(((pgn.current_page - 1) * pgn.pageSize)) + parseInt((index + 1))}}
                 </template>
                 <template v-if="column.key === 'picture'">
                     <a-avatar @click="showModal(record)" v-if="record.picture" :size="32" :src="record.picture">
