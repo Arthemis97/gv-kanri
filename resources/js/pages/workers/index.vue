@@ -157,7 +157,7 @@ const showModal = (data) => {
 }
 
 const showBlackModal = (data) => {
-    if(data.black_list) {
+    if(data.black_list && data.black_list !== 0) {
         useEvent.emit('modal:black:open', data)
     }
 }
